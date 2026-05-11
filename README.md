@@ -100,12 +100,12 @@ M431_PROJECT_WEBSITE
 
 ## Bereits umgesetzt
 
-* GitHub Repository erstellt
-* Git eingerichtet
 * Grundstruktur der Website erstellt
 * Navigation erstellt
 * Erste CSS-Gestaltung umgesetzt
 * Live Server eingerichtet
+* Suchleiste eingerichtet
+* PopUp-Fenster eingerichtet
 
 ## Geplant
 

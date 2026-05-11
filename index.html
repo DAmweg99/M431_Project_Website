@@ -8,18 +8,53 @@
     <title>Meine Rezepte Website</title>
 
     <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
+<div class="popup-overlay" id="popup">
+
+    <div class="popup-content">
+
+        <span class="close-popup" onclick="closePopup()">
+            &times;
+        </span>
+
+        <h2>Welcome!</h2>
+
+        <p>
+            Simply good food. Where passion meets the plate
+        </p>
+
+        <br>
+
+        <p>
+            Danke, dass du meine Website besuchst
+            Sie befindet sich momentan noch in der Anfangsphase
+            und wird stetig erweitert und verbessert
+        </p>
+
+        <br>
+
+        <p>
+            Bis dahin wünsche ich dir viel Spass beim Stöbern
+            und Nachkochen
+        </p>
+
+    </div>
+</div>
+
     <header>
-        <h1>Meine Rezept Website</h1>
+        <h1>Food Atelier</h1>
 
         <nav>
             <a href="#">Startseite</a>
             <a href="#">Neuigkeiten</a>
             <a href="#">Kategorien </a>
-            <a href="#">Suchen</a>
             <a href="#">Kochschule</a>
         </nav>
     </header>
@@ -27,19 +62,17 @@
     <main>
 
         <section>
-            <h2>Welcome!</h2>
-            <p>
-                Simply good food. Where passion meets the plate.
-            </p>
-        </section>
 
-        <section>
 
             <h2>Rezept der Woche</h2>
 
             <div class="recipe-container">
                 <h3> Der Sommerlicher Hit</h3>
-                <p> Lachsfilet mit Zitronenbutter und grillierten Spargel Pfirsich Ragout dazu Kräuterspätzli</p>
+
+                <p> <a href="recipe.html">
+                    Lachsfilet mit Zitronenbutter und grillierten Spargel Pfirsich Ragout dazu Kräuterspätzli
+                    </a>
+                </a>
 
 
     </main>
@@ -48,3 +81,12 @@
 
 </body>
 </html>
+
+<section class="hero">
+
+    <h2> Uf was hesch du lust?</h2>
+
+    <div class="search-box">
+        <input type="text" placeholder="Rezept, Zutaten, Trends ...">
+    </div>
+</section>

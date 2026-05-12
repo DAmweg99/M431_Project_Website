@@ -244,7 +244,3 @@ Dabei werden folgende Punkte präsentiert:
 ## Fazit
 
 Der erste Sprint konnte erfolgreich abgeschlossen werden. Die Grundstruktur der Website wurde erstellt und erste moderne Design Elemente wurden umgesetzt. Zusätzlich konnte Erfahrung mit Git, GitHub und der allgemeinen Projektorganisation gesammelt werden.
-
----
-│
-└── images/

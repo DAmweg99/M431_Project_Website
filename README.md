@@ -2,46 +2,52 @@
 
 ## Inhaltsverzeichnis
 
-1. Projektbeschreibung
-2. Zielsetzung
-3. Technologien
-   - Frontend
-   - Backend
-   - Datenbank
-   - Entwicklungsumgebung
-4. Projektmethode
-5. Sprintplanung
-6. Risiken
-7. Projektstruktur
-8. Installation
-   - Repository klonen
-   - Projekt starten
-9. Sprint 1
-   - Zeitraum
-   - Sprintplanung
-   - Sprintziel
-   - Aufgaben
-   - Verwendete Technologien
-   - Sprint Review
-   - Offene Punkte für das Review
-   - Sprint Retrospektive
-   - Sternfisch Modell
-   - Fazit
-10. Autor
+1. [Projektbeschreibung](#1-projektbeschreibung)
+2. [Zielsetzung](#2-zielsetzung)
+3. [Technologien](#3-technologien)
+   1. [Frontend](#31-frontend)
+   2. [Backend](#32-backend)
+   3. [Datenbank](#33-datenbank)
+   4. [Entwicklungsumgebung](#34-entwicklungsumgebung)
+4. [Projektmethode](#4-projektmethode)
+5. [Sprintplanung](#5-sprintplanung)
+6. [Risiken](#6-risiken)
+7. [Projektstruktur](#7-projektstruktur)
+8. [Installation](#8-installation)
+   1. [Repository klonen](#81-repository-klonen)
+   2. [Projekt starten](#82-projekt-starten)
+9. [Sprint 1](#9-sprint-1)
+   1. [Zeitraum](#91-zeitraum)
+   2. [Sprintplanung](#92-sprintplanung)
+      1. [Sprintziel](#921-sprintziel)
+      2. [Aufgaben](#922-aufgaben)
+      3. [Verwendete Technologien](#923-verwendete-technologien)
+   3. [Sprint Review](#93-sprint-review)
+      1. [Durchgeführtes Review](#931-durchgeführtes-review)
+      2. [Offene Punkte für das Review](#932-offene-punkte-für-das-review)
+   4. [Sprint Retrospektive](#94-sprint-retrospektive)
+      1. [Sternfisch Modell](#941-sternfisch-modell)
+         1. [Beibehalten](#9411-beibehalten)
+         2. [Mehr davon](#9412-mehr-davon)
+         3. [Weniger davon](#9413-weniger-davon)
+         4. [Stoppen](#9414-stoppen)
+         5. [Neu anfangen](#9415-neu-anfangen)
+10. [Autor](#10-autor)
 
 ---
 
-# 1. Projektbeschreibung
+# 1 Projektbeschreibung
 
 Food Atelier ist eine moderne Rezept Website, auf welcher eigene Rezepte veröffentlicht werden. Benutzer sollen Rezepte einfach durchsuchen, ansehen und nachkochen können. Die Website wird mit HTML, CSS und JavaScript entwickelt und später mit einem Python Backend sowie einer SQL Datenbank erweitert.
 
 ---
 
-# 2. Zielsetzung
+# 2 Zielsetzung
 
 Ziel des Projektes ist die Entwicklung einer modernen und benutzerfreundlichen Rezept Website.
 
 Die Website soll:
+
 - eigene Rezepte übersichtlich darstellen
 - ein modernes und ansprechendes Design besitzen
 - eine Suchfunktion enthalten
@@ -50,23 +56,23 @@ Die Website soll:
 
 ---
 
-# 3. Technologien
+# 3 Technologien
 
-## Frontend
+## 3.1 Frontend
 
 - HTML
 - CSS
 - JavaScript
 
-## Backend
+## 3.2 Backend
 
 - Python
 
-## Datenbank
+## 3.3 Datenbank
 
 - PostgreSQL
 
-## Entwicklungsumgebung
+## 3.4 Entwicklungsumgebung
 
 - Visual Studio Code
 - Git
@@ -74,11 +80,12 @@ Die Website soll:
 
 ---
 
-# 4. Projektmethode
+# 4 Projektmethode
 
 Das Projekt wird mit einem agilen Vorgehen umgesetzt. Die Entwicklung erfolgt schrittweise in mehreren Sprints.
 
 Jeder Sprint beinhaltet:
+
 - Planung der nächsten Funktionen
 - Umsetzung der Features
 - Testen der Website
@@ -88,7 +95,7 @@ Da das Projekt alleine entwickelt wird, erfolgt die Organisation vereinfacht ohn
 
 ---
 
-# 5. Sprintplanung
+# 5 Sprintplanung
 
 | Sprint | Zeitraum | Inhalt |
 |---|---|---|
@@ -98,7 +105,7 @@ Da das Projekt alleine entwickelt wird, erfolgt die Organisation vereinfacht ohn
 
 ---
 
-# 6. Risiken
+# 6 Risiken
 
 | Risiko | Beschreibung |
 |---|---|
@@ -110,7 +117,7 @@ Da das Projekt alleine entwickelt wird, erfolgt die Organisation vereinfacht ohn
 
 ---
 
-# 7. Projektstruktur
+# 7 Projektstruktur
 
 ```text
 M431_Project_Website/
@@ -127,23 +134,50 @@ M431_Project_Website/
 ├── backend/
 │   └── main.py
 ```
-# 8. Sprint 1
 
-## Zeitraum
+---
+
+# 8 Installation
+
+## 8.1 Repository klonen
+
+Das Repository wird zuerst lokal auf den Computer geklont.
+
+```bash
+git clone <repository-url>
+```
+
+Danach wird in den Projektordner gewechselt.
+
+```bash
+cd M431_Project_Website
+```
+
+## 8.2 Projekt starten
+
+Die Website kann lokal gestartet werden, indem die Datei `index.html` im Browser geöffnet wird.
+
+Alternativ kann das Projekt in Visual Studio Code mit einer Live Server Erweiterung gestartet werden.
+
+---
+
+# 9 Sprint 1
+
+## 9.1 Zeitraum
 
 08.05.2026 - 28.05.2026
 
 ---
 
-## Sprintplanung
+## 9.2 Sprintplanung
 
-### Sprintziel
+### 9.2.1 Sprintziel
 
 Im ersten Sprint wird die Grundstruktur der Website erstellt. Zusätzlich sollen erste Designideen umgesetzt und die Entwicklungsumgebung vorbereitet werden.
 
 ---
 
-### Aufgaben
+### 9.2.2 Aufgaben
 
 | Aufgabe | Status |
 |---|---|
@@ -161,7 +195,7 @@ Im ersten Sprint wird die Grundstruktur der Website erstellt. Zusätzlich sollen
 
 ---
 
-### Verwendete Technologien
+### 9.2.3 Verwendete Technologien
 
 - HTML
 - CSS
@@ -172,13 +206,14 @@ Im ersten Sprint wird die Grundstruktur der Website erstellt. Zusätzlich sollen
 
 ---
 
-## Sprint Review
+## 9.3 Sprint Review
 
-### Durchgeführtes Review
+### 9.3.1 Durchgeführtes Review
 
 Das Sprint Review Gespräch mit der Lehrperson findet am Ende des ersten Sprints statt.
 
 Dabei werden folgende Punkte präsentiert:
+
 - Aufbau der Website
 - Aktuelles Design
 - Navigation und Benutzeroberfläche
@@ -189,7 +224,7 @@ Dabei werden folgende Punkte präsentiert:
 
 ---
 
-### Offene Punkte für das Review
+### 9.3.2 Offene Punkte für das Review
 
 - Feedback zum aktuellen Design einholen
 - Verbesserungsvorschläge besprechen
@@ -198,11 +233,11 @@ Dabei werden folgende Punkte präsentiert:
 
 ---
 
-## Sprint Retrospektive
+## 9.4 Sprint Retrospektive
 
-### Sternfisch Modell
+### 9.4.1 Sternfisch Modell
 
-#### Beibehalten
+#### 9.4.1.1 Beibehalten
 
 - Strukturierte Arbeitsweise
 - Regelmässige Git Commits
@@ -211,7 +246,7 @@ Dabei werden folgende Punkte präsentiert:
 
 ---
 
-#### Mehr davon
+#### 9.4.1.2 Mehr davon
 
 - Mehr Zeit für Design Verbesserungen
 - Früheres Testen einzelner Funktionen
@@ -219,24 +254,26 @@ Dabei werden folgende Punkte präsentiert:
 
 ---
 
-#### Weniger davon
+#### 9.4.1.3 Weniger davon
 
 - Zu lange an kleinen Design Details arbeiten
 - Mehrere Änderungen gleichzeitig durchführen
 
 ---
 
-#### Stoppen
+#### 9.4.1.4 Stoppen
 
 - Unstrukturierte Änderungen ohne Planung
 - Zu grosse Änderungen ohne Zwischenspeicherung
 
 ---
 
-#### Neu anfangen
+#### 9.4.1.5 Neu anfangen
 
 - Arbeiten mit separaten Git Branches
 - Bessere Planung der nächsten Features
 - Frühzeitige Vorbereitung des Backends
 
 ---
+
+ 

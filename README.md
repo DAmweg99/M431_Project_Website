@@ -1,12 +1,43 @@
 # Food Atelier
 
-## Projektbeschreibung
+## Inhaltsverzeichnis
+
+1. Projektbeschreibung
+2. Zielsetzung
+3. Technologien
+   - Frontend
+   - Backend
+   - Datenbank
+   - Entwicklungsumgebung
+4. Projektmethode
+5. Sprintplanung
+6. Risiken
+7. Projektstruktur
+8. Installation
+   - Repository klonen
+   - Projekt starten
+9. Sprint 1
+   - Zeitraum
+   - Sprintplanung
+   - Sprintziel
+   - Aufgaben
+   - Verwendete Technologien
+   - Sprint Review
+   - Offene Punkte für das Review
+   - Sprint Retrospektive
+   - Sternfisch Modell
+   - Fazit
+10. Autor
+
+---
+
+# 1. Projektbeschreibung
 
 Food Atelier ist eine moderne Rezept Website, auf welcher eigene Rezepte veröffentlicht werden. Benutzer sollen Rezepte einfach durchsuchen, ansehen und nachkochen können. Die Website wird mit HTML, CSS und JavaScript entwickelt und später mit einem Python Backend sowie einer SQL Datenbank erweitert.
 
 ---
 
-## Zielsetzung
+# 2. Zielsetzung
 
 Ziel des Projektes ist die Entwicklung einer modernen und benutzerfreundlichen Rezept Website.
 
@@ -19,27 +50,31 @@ Die Website soll:
 
 ---
 
-## Technologien
+# 3. Technologien
 
-### Frontend
+## Frontend
+
 - HTML
 - CSS
 - JavaScript
 
-### Backend
+## Backend
+
 - Python
 
-### Datenbank
+## Datenbank
+
 - PostgreSQL
 
-### Entwicklungsumgebung
+## Entwicklungsumgebung
+
 - Visual Studio Code
 - Git
 - GitHub
 
 ---
 
-## Projektmethode
+# 4. Projektmethode
 
 Das Projekt wird mit einem agilen Vorgehen umgesetzt. Die Entwicklung erfolgt schrittweise in mehreren Sprints.
 
@@ -53,7 +88,7 @@ Da das Projekt alleine entwickelt wird, erfolgt die Organisation vereinfacht ohn
 
 ---
 
-## Sprintplanung
+# 5. Sprintplanung
 
 | Sprint | Zeitraum | Inhalt |
 |---|---|---|
@@ -63,7 +98,7 @@ Da das Projekt alleine entwickelt wird, erfolgt die Organisation vereinfacht ohn
 
 ---
 
-## Risiken
+# 6. Risiken
 
 | Risiko | Beschreibung |
 |---|---|
@@ -75,7 +110,7 @@ Da das Projekt alleine entwickelt wird, erfolgt die Organisation vereinfacht ohn
 
 ---
 
-## Projektstruktur
+# 7. Projektstruktur
 
 ```text
 M431_Project_Website/
@@ -91,10 +126,8 @@ M431_Project_Website/
 │
 ├── backend/
 │   └── main.py
-│
-└── images/
 ```
-# Sprint 1
+# 8. Sprint 1
 
 ## Zeitraum
 
@@ -102,15 +135,15 @@ M431_Project_Website/
 
 ---
 
-# Sprintplanung
+## Sprintplanung
 
-## Sprintziel
+### Sprintziel
 
 Im ersten Sprint wird die Grundstruktur der Website erstellt. Zusätzlich sollen erste Designideen umgesetzt und die Entwicklungsumgebung vorbereitet werden.
 
 ---
 
-## Aufgaben
+### Aufgaben
 
 | Aufgabe | Status |
 |---|---|
@@ -128,7 +161,7 @@ Im ersten Sprint wird die Grundstruktur der Website erstellt. Zusätzlich sollen
 
 ---
 
-## Verwendete Technologien
+### Verwendete Technologien
 
 - HTML
 - CSS
@@ -139,9 +172,9 @@ Im ersten Sprint wird die Grundstruktur der Website erstellt. Zusätzlich sollen
 
 ---
 
-# Sprint Review
+## Sprint Review
 
-## Durchgeführtes Review
+### Durchgeführtes Review
 
 Das Sprint Review Gespräch mit der Lehrperson findet am Ende des ersten Sprints statt.
 
@@ -156,7 +189,7 @@ Dabei werden folgende Punkte präsentiert:
 
 ---
 
-## Offene Punkte für das Review
+### Offene Punkte für das Review
 
 - Feedback zum aktuellen Design einholen
 - Verbesserungsvorschläge besprechen
@@ -165,11 +198,11 @@ Dabei werden folgende Punkte präsentiert:
 
 ---
 
-# Sprint Retrospektive
+## Sprint Retrospektive
 
-## Sternfisch Modell
+### Sternfisch Modell
 
-### Beibehalten
+#### Beibehalten
 
 - Strukturierte Arbeitsweise
 - Regelmässige Git Commits
@@ -178,7 +211,7 @@ Dabei werden folgende Punkte präsentiert:
 
 ---
 
-### Mehr davon
+#### Mehr davon
 
 - Mehr Zeit für Design Verbesserungen
 - Früheres Testen einzelner Funktionen
@@ -186,24 +219,32 @@ Dabei werden folgende Punkte präsentiert:
 
 ---
 
-### Weniger davon
+#### Weniger davon
 
 - Zu lange an kleinen Design Details arbeiten
 - Mehrere Änderungen gleichzeitig durchführen
 
 ---
 
-### Stoppen
+#### Stoppen
 
 - Unstrukturierte Änderungen ohne Planung
 - Zu grosse Änderungen ohne Zwischenspeicherung
 
 ---
 
-### Neu anfangen
+#### Neu anfangen
 
 - Arbeiten mit separaten Git Branches
 - Bessere Planung der nächsten Features
 - Frühzeitige Vorbereitung des Backends
 
 ---
+
+## Fazit
+
+Der erste Sprint konnte erfolgreich abgeschlossen werden. Die Grundstruktur der Website wurde erstellt und erste moderne Design Elemente wurden umgesetzt. Zusätzlich konnte Erfahrung mit Git, GitHub und der allgemeinen Projektorganisation gesammelt werden.
+
+---
+│
+└── images/

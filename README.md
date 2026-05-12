@@ -1,149 +1,47 @@
-# Meine Rezept Website
+# Food Atelier
 
 ## Projektbeschreibung
 
-Dieses Projekt ist eine selbst entwickelte Rezept-Website im Rahmen des Moduls M431. Ziel der Website ist es, eigene Rezepte online zu veröffentlichen, damit Benutzer diese anschauen und nachkochen können.
-
-Die Website wird von Grund auf programmiert und beinhaltet sowohl Frontend- als auch Backend-Entwicklung.
+Food Atelier ist eine moderne Rezept Website, auf welcher eigene Rezepte veröffentlicht werden. Benutzer sollen Rezepte einfach durchsuchen, ansehen und nachkochen können. Die Website wird mit HTML, CSS und JavaScript entwickelt und später mit einem Python Backend sowie einer SQL Datenbank erweitert.
 
 ---
 
-# Projektziele
+## Zielsetzung
 
-* Eigene Rezepte online veröffentlichen
-* Moderne und benutzerfreundliche Website erstellen
-* Frontend- und Backend-Entwicklung lernen
-* SQL-Datenbanken verstehen und anwenden
-* Website online deployen
+Ziel des Projektes ist die Entwicklung einer modernen und benutzerfreundlichen Rezept Website.
 
----
-
-# Geplante Funktionen
-
-## Frontend
-
-* Startseite
-* Navigation
-* Rezept der Woche
-* Rezeptübersicht
-* Suchfunktion
-* Kategorien
-* Responsive Design
-
-## Backend
-
-* REST API mit FastAPI
-* Rezeptdaten verwalten
-* Bilder speichern
-* Admin-Bereich für Rezept-Uploads
-
-## Datenbank
-
-* PostgreSQL
-* Speicherung von:
-
-  * Rezepttitel
-  * Beschreibung
-  * Zutaten
-  * Kochanleitung
-  * Kategorien
-  * Bilder
+Die Website soll:
+- eigene Rezepte übersichtlich darstellen
+- ein modernes und ansprechendes Design besitzen
+- eine Suchfunktion enthalten
+- mit einer SQL Datenbank erweitert werden können
+- online verfügbar sein
 
 ---
 
-# Verwendete Technologien
+## Technologien
 
-## Frontend
+### Frontend
+- HTML
+- CSS
+- JavaScript
 
-* HTML5
-* CSS3
-* JavaScript
+### Backend
+- Python
 
-## Backend
+### Datenbank
+- PostgreSQL
 
-* Python
-* FastAPI
-
-## Datenbank
-
-* PostgreSQL
-
-## Tools
-
-* Visual Studio Code
-* GitHub
-
----
-
-# Projektstruktur
-
-```text
-M431_PROJECT_WEBSITE
-│
-├── backend
-│   └── main.py
-│
-├── css
-│   └── style.css
-│
-├── js
-│   └── app.js
-│
-├── index.html
-│
-└── README.md
-```
-
----
-
-# Installation
-
-## Repository klonen
-
-```bash
-git clone <repository-url>
-```
-
----
-
-# Projekt starten
-
-## Frontend
-
-Mit der VS Code Extension "Live Server":
-
-* index.html öffnen
-* Rechtsklick
-* "Open with Live Server"
-
-## Backend
-
-```bash
-uvicorn backend.main:app --reload
-```
-
----
-
-# Lernziele
-
-Während dieses Projekts werden folgende Themen vertieft:
-
-* HTML Strukturierung
-* CSS Layouts und Design
-* Flexbox
-* JavaScript Grundlagen
-* Python Backend-Entwicklung
-* REST APIs
-* SQL und PostgreSQL
-* Git und GitHub
-* Deployment
+### Entwicklungsumgebung
+- Visual Studio Code
+- Git
+- GitHub
 
 ---
 
 ## Projektmethode
 
-Das Projekt wird mit einem agilen Vorgehen umgesetzt.
-Die Entwicklung erfolgt schrittweise in mehreren kleinen Sprints.
+Das Projekt wird mit einem agilen Vorgehen umgesetzt. Die Entwicklung erfolgt schrittweise in mehreren Sprints.
 
 Jeder Sprint beinhaltet:
 - Planung der nächsten Funktionen
@@ -151,80 +49,47 @@ Jeder Sprint beinhaltet:
 - Testen der Website
 - Verbesserung des Designs und der Benutzerfreundlichkeit
 
-Da das Projekt alleine entwickelt wird, erfolgt die Organisation
-vereinfacht ohne komplexes Scrum-Management oder Issue-Tracking.
+Da das Projekt alleine entwickelt wird, erfolgt die Organisation vereinfacht ohne komplexes Scrum Management oder Issue Tracking.
 
-Die Aufgaben werden direkt in einzelne Arbeitsschritte unterteilt
-und laufend dokumentiert.
+---
 
 ## Sprintplanung
 
-### Sprint 1 – Projektaufbau
-- GitHub Repository erstellen
-- Projektstruktur erstellen
-- HTML / CSS / JavaScript vorbereiten
-- Erste Startseite erstellen
+| Sprint | Zeitraum | Inhalt |
+|---|---|---|
+| Sprint 1 | 08.05.2026 - 28.05.2026 | Projektaufbau, GitHub Repository erstellen, HTML Grundstruktur, CSS Grunddesign, Header und Navigation erstellen |
+| Sprint 2 | 29.05.2026 - 18.06.2026 | Hero Section entwickeln, Suchfunktion vorbereiten, Rezept der Woche Bereich erstellen, Bilder und Hover Effekte hinzufügen |
+| Sprint 3 | 19.06.2026 - 03.07.2026 | Backend vorbereiten, SQL Datenbank planen, Website optimieren, Fehler beheben, Abschluss und Dokumentation |
 
-### Sprint 2 – Design & Benutzeroberfläche
-- Modernes Layout erstellen
-- Header und Navigation designen
-- Hero-Section mit Suchfeld erstellen
-- Popup-Welcome Fenster erstellen
-
-### Sprint 3 – Rezeptbereich
-- "Rezept der Woche" entwickeln
-- Bilder und Buttons hinzufügen
-- Hover-Effekte und Styling verbessern
-
-### Sprint 4 – Backend & Datenbank
-- Python Backend vorbereiten
-- Verbindung zur SQL-Datenbank planen
-- Rezeptdaten speichern und abrufen
-
-### Sprint 5 – Optimierung & Testing
-- Fehler beheben
-- Responsive Design verbessern
-- Benutzerfreundlichkeit optimieren
-- Abschlussdokumentation erstellen
+---
 
 ## Risiken
 
 | Risiko | Beschreibung |
 |---|---|
-| Zeitmanagement | Einzelne Features benötigen mehr Zeit als geplant |
+| Zeitmanagement | Einzelne Funktionen benötigen mehr Zeit als geplant |
 | Neue Technologien | Fehlende Erfahrung mit Backend und Datenbanken |
-| Designänderungen | Häufige Anpassungen am Layout können zusätzlichen Aufwand verursachen |
-| Fehlersuche | Kleine Syntaxfehler können grosse Probleme verursachen |
-| Datenbankanbindung | Verbindung zwischen Frontend und Backend könnte komplex werden |
+| Designänderungen | Häufige Anpassungen am Layout verursachen zusätzlichen Aufwand |
+| Fehlersuche | Kleine Syntaxfehler können grössere Probleme verursachen |
+| Datenbankanbindung | Verbindung zwischen Frontend und Backend kann komplex werden |
 
-## Zielsetzung
+---
 
-Ziel des Projektes ist die Entwicklung einer modernen Rezept-Website,
-auf welcher eigene Rezepte veröffentlicht werden können.
+## Projektstruktur
 
-Die Website soll:
-- modern und benutzerfreundlich sein
-- ein ansprechendes Design besitzen
-- eine Suchfunktion enthalten
-- Rezepte übersichtlich darstellen
-- mit einer SQL-Datenbank erweitert werden können
-- online verfügbar sein
+```text
+M431_Project_Website/
 
-## Technologien
-
-Frontend:
-- HTML
-- CSS
-- JavaScript
-
-Backend:
-- Python
-
-Datenbank:
-- PostgreSQL
-
-Versionsverwaltung:
-- Git & GitHub
-
-Entwicklungsumgebung:
-- Visual Studio Code
+├── index.html
+├── recipe.html
+│
+├── css/
+│   └── style.css
+│
+├── js/
+│   └── app.js
+│
+├── backend/
+│   └── main.py
+│
+└── images/

@@ -93,7 +93,7 @@ M431_Project_Website/
 │   └── main.py
 │
 └── images/
-
+```
 # Sprint 1
 
 ## Zeitraum
@@ -205,3 +205,5 @@ Dabei werden folgende Punkte präsentiert:
 - Arbeiten mit separaten Git Branches
 - Bessere Planung der nächsten Features
 - Frühzeitige Vorbereitung des Backends
+
+---

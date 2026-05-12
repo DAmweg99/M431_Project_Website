@@ -104,12 +104,6 @@ M431_PROJECT_WEBSITE
 git clone <repository-url>
 ```
 
-## Projekt öffnen
-
-```bash
-code .
-```
-
 ---
 
 # Projekt starten

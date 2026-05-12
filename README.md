@@ -93,3 +93,115 @@ M431_Project_Website/
 │   └── main.py
 │
 └── images/
+
+# Sprint 1
+
+## Zeitraum
+
+08.05.2026 - 28.05.2026
+
+---
+
+# Sprintplanung
+
+## Sprintziel
+
+Im ersten Sprint wird die Grundstruktur der Website erstellt. Zusätzlich sollen erste Designideen umgesetzt und die Entwicklungsumgebung vorbereitet werden.
+
+---
+
+## Aufgaben
+
+| Aufgabe | Status |
+|---|---|
+| GitHub Repository erstellen | Erledigt |
+| Projektstruktur erstellen | Erledigt |
+| HTML Grundstruktur erstellen | Erledigt |
+| CSS Datei einrichten | Erledigt |
+| JavaScript Datei einrichten | Erledigt |
+| Header und Navigation erstellen | Erledigt |
+| Hero Section mit Suchfeld erstellen | Erledigt |
+| Popup Welcome Fenster erstellen | Erledigt |
+| Rezept der Woche Bereich erstellen | Erledigt |
+| Bilder und Design hinzufügen | Erledigt |
+| README Dokumentation erstellen | Erledigt |
+
+---
+
+## Verwendete Technologien
+
+- HTML
+- CSS
+- JavaScript
+- Git
+- GitHub
+- Visual Studio Code
+
+---
+
+# Sprint Review
+
+## Durchgeführtes Review
+
+Das Sprint Review Gespräch mit der Lehrperson findet am Ende des ersten Sprints statt.
+
+Dabei werden folgende Punkte präsentiert:
+- Aufbau der Website
+- Aktuelles Design
+- Navigation und Benutzeroberfläche
+- Hero Section mit Suchfeld
+- Rezept der Woche Bereich
+- Verwendung von Git und GitHub
+- Projektstruktur und Dokumentation
+
+---
+
+## Offene Punkte für das Review
+
+- Feedback zum aktuellen Design einholen
+- Verbesserungsvorschläge besprechen
+- Weitere Funktionen für Sprint 2 definieren
+- Planung der Backend Entwicklung vorbereiten
+
+---
+
+# Sprint Retrospektive
+
+## Sternfisch Modell
+
+### Beibehalten
+
+- Strukturierte Arbeitsweise
+- Regelmässige Git Commits
+- Schrittweise Umsetzung der Features
+- Dokumentation direkt während der Entwicklung
+
+---
+
+### Mehr davon
+
+- Mehr Zeit für Design Verbesserungen
+- Früheres Testen einzelner Funktionen
+- Weitere moderne CSS Effekte ausprobieren
+
+---
+
+### Weniger davon
+
+- Zu lange an kleinen Design Details arbeiten
+- Mehrere Änderungen gleichzeitig durchführen
+
+---
+
+### Stoppen
+
+- Unstrukturierte Änderungen ohne Planung
+- Zu grosse Änderungen ohne Zwischenspeicherung
+
+---
+
+### Neu anfangen
+
+- Arbeiten mit separaten Git Branches
+- Bessere Planung der nächsten Features
+- Frühzeitige Vorbereitung des Backends

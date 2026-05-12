@@ -32,8 +32,6 @@
          3. [Weniger davon](#9413-weniger-davon)
          4. [Stoppen](#9414-stoppen)
          5. [Neu anfangen](#9415-neu-anfangen)
-10. [Autor](#10-autor)
-
 ---
 
 # 1 Projektbeschreibung

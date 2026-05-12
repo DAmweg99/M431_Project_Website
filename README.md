@@ -96,28 +96,6 @@ M431_PROJECT_WEBSITE
 
 ---
 
-# Aktueller Entwicklungsstand
-
-## Bereits umgesetzt
-
-* GitHub Repository erstellt
-* Git eingerichtet
-* Grundstruktur der Website erstellt
-* Navigation erstellt
-* Erste CSS-Gestaltung umgesetzt
-* Live Server eingerichtet
-
-## Geplant
-
-* Rezeptkarten
-* Datenbankanbindung
-* API-Endpunkte
-* Rezept-Upload
-* Bild-Upload
-* Online Deployment
-
----
-
 # Installation
 
 ## Repository klonen
@@ -168,8 +146,91 @@ Während dieses Projekts werden folgende Themen vertieft:
 
 ---
 
-# Autor
+## Projektmethode
 
-Dustin Amweg
+Das Projekt wird mit einem agilen Vorgehen umgesetzt.
+Die Entwicklung erfolgt schrittweise in mehreren kleinen Sprints.
 
-Modul M431 – Projekt Website
+Jeder Sprint beinhaltet:
+- Planung der nächsten Funktionen
+- Umsetzung der Features
+- Testen der Website
+- Verbesserung des Designs und der Benutzerfreundlichkeit
+
+Da das Projekt alleine entwickelt wird, erfolgt die Organisation
+vereinfacht ohne komplexes Scrum-Management oder Issue-Tracking.
+
+Die Aufgaben werden direkt in einzelne Arbeitsschritte unterteilt
+und laufend dokumentiert.
+
+## Sprintplanung
+
+### Sprint 1 – Projektaufbau
+- GitHub Repository erstellen
+- Projektstruktur erstellen
+- HTML / CSS / JavaScript vorbereiten
+- Erste Startseite erstellen
+
+### Sprint 2 – Design & Benutzeroberfläche
+- Modernes Layout erstellen
+- Header und Navigation designen
+- Hero-Section mit Suchfeld erstellen
+- Popup-Welcome Fenster erstellen
+
+### Sprint 3 – Rezeptbereich
+- "Rezept der Woche" entwickeln
+- Bilder und Buttons hinzufügen
+- Hover-Effekte und Styling verbessern
+
+### Sprint 4 – Backend & Datenbank
+- Python Backend vorbereiten
+- Verbindung zur SQL-Datenbank planen
+- Rezeptdaten speichern und abrufen
+
+### Sprint 5 – Optimierung & Testing
+- Fehler beheben
+- Responsive Design verbessern
+- Benutzerfreundlichkeit optimieren
+- Abschlussdokumentation erstellen
+
+## Risiken
+
+| Risiko | Beschreibung |
+|---|---|
+| Zeitmanagement | Einzelne Features benötigen mehr Zeit als geplant |
+| Neue Technologien | Fehlende Erfahrung mit Backend und Datenbanken |
+| Designänderungen | Häufige Anpassungen am Layout können zusätzlichen Aufwand verursachen |
+| Fehlersuche | Kleine Syntaxfehler können grosse Probleme verursachen |
+| Datenbankanbindung | Verbindung zwischen Frontend und Backend könnte komplex werden |
+
+## Zielsetzung
+
+Ziel des Projektes ist die Entwicklung einer modernen Rezept-Website,
+auf welcher eigene Rezepte veröffentlicht werden können.
+
+Die Website soll:
+- modern und benutzerfreundlich sein
+- ein ansprechendes Design besitzen
+- eine Suchfunktion enthalten
+- Rezepte übersichtlich darstellen
+- mit einer SQL-Datenbank erweitert werden können
+- online verfügbar sein
+
+## Technologien
+
+Frontend:
+- HTML
+- CSS
+- JavaScript
+
+Backend:
+- Python
+
+Datenbank:
+- PostgreSQL
+
+Versionsverwaltung:
+- Git & GitHub
+
+Entwicklungsumgebung:
+- Visual Studio Code

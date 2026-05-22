@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(python --version)",
+      "PowerShell(pip --version)",
+      "PowerShell(py --version)",
+      "PowerShell(py -m pip --version)",
+      "PowerShell(py -m pip install -r \"c:\\\\Users\\\\dustin.amweg\\\\OneDrive - TBZ\\\\Secrets\\\\M431_Project_Website\\\\requirements.txt\")",
+      "PowerShell(pg_config --version 2>$null)",
+      "PowerShell(psql --version 2>$null)",
+      "PowerShell($pgPath = Get-ChildItem \"C:\\\\Program Files\\\\PostgreSQL\" | Sort-Object Name -Descending | Select-Object -First 1; Write-Output \"Gefunden: $\\($pgPath.FullName\\)\"; & \"$\\($pgPath.FullName\\)\\\\bin\\\\psql.exe\" --version)"
+    ]
+  }
+}

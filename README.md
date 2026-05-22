@@ -145,7 +145,12 @@ Das Repository wird zuerst lokal auf den Computer geklont.
 git clone <repository-url>
 ```
 
-Danach wird in den Projektordner gewechselt.
+* Grundstruktur der Website erstellt
+* Navigation erstellt
+* Erste CSS-Gestaltung umgesetzt
+* Live Server eingerichtet
+* Suchleiste eingerichtet
+* PopUp-Fenster eingerichtet
 
 ```bash
 cd M431_Project_Website

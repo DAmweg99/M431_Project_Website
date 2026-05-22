@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kategorien – Food Atelier</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- ── Header ───────────────────────────────────────────── -->
+    <header>
+        <h1>Food Atelier</h1>
+        <nav>
+            <a href="index.html">Startseite</a>
+            <a href="#">Neuigkeiten</a>
+            <a href="kategorien.html" class="nav-active">Kategorien</a>
+            <a href="#">Kochschule</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <!-- ── Menüart / Kategorie-Karten ───────────────────── -->
+        <section class="menuart-section">
+
+            <h2 class="menuart-title">Menüart</h2>
+            <p class="menuart-subtitle">Wähle eine Kategorie um die passenden Rezepte zu sehen</p>
+
+            <div class="menuart-grid">
+
+                <div class="menuart-card" onclick="filterByCategory('Fleisch')">
+                    <img
+                        src="https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=600&h=600&fit=crop"
+                        alt="Fleisch"
+                        loading="lazy"
+                    >
+                    <div class="menuart-overlay">
+                        <div class="menuart-frame">
+                            <span>Fleisch</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menuart-card" onclick="filterByCategory('Fisch')">
+                    <img
+                        src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=600&h=600&fit=crop"
+                        alt="Fisch"
+                        loading="lazy"
+                    >
+                    <div class="menuart-overlay">
+                        <div class="menuart-frame">
+                            <span>Fisch</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menuart-card" onclick="filterByCategory('Geflügel')">
+                    <img
+                        src="https://images.unsplash.com/photo-1587593810167-a84920ea0781?w=600&h=600&fit=crop"
+                        alt="Geflügel"
+                        loading="lazy"
+                    >
+                    <div class="menuart-overlay">
+                        <div class="menuart-frame">
+                            <span>Geflügel</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menuart-card" onclick="filterByCategory('Vegi')">
+                    <img
+                        src="https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600&h=600&fit=crop"
+                        alt="Vegi"
+                        loading="lazy"
+                    >
+                    <div class="menuart-overlay">
+                        <div class="menuart-frame">
+                            <span>Vegi</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ── Gefiltertes Rezept-Grid ───────────────────────── -->
+        <section class="all-recipes-section" id="rezepte-anker">
+            <div class="section-header">
+                <h2 class="section-title" id="grid-title">Alle Rezepte</h2>
+            </div>
+
+            <div class="recipe-grid" id="recipe-grid">
+                <div class="grid-loading">
+                    <div class="spinner"></div>
+                    <p>Rezepte werden geladen …</p>
+                </div>
+            </div>
+
+            <div class="no-results" id="no-results" style="display:none;">
+                <p>😕 Keine Rezepte in dieser Kategorie gefunden.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

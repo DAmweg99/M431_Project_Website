@@ -1,5 +1,485 @@
-function closePopup() {
-    
-    document.getElementById("popup").style.display = "none";
+// ════════════════════════════════════════════════════════════
+//  Food Atelier – Frontend API Integration
+// ════════════════════════════════════════════════════════════
 
+const API_BASE = "http://localhost:8000/api";
+const IMG_BASE = "http://localhost:8000/uploads";
+
+// ── Bild-URL aus gespeichertem Pfad ──────────────────────────────
+function getImageUrl(imagePath) {
+    if (!imagePath) return null;
+    // Extrahiert nur den Dateinamen aus dem vollen Serverpfad
+    const filename = imagePath.split(/[\\/]/).pop();
+    return `${IMG_BASE}/${filename}`;
 }
+
+// ── API-Aufruf Helfer ─────────────────────────────────────────────
+async function apiFetch(path) {
+    const res = await fetch(`${API_BASE}${path}`);
+    if (!res.ok) throw new Error(`API Fehler ${res.status}`);
+    return res.json();
+}
+
+
+// ════════════════════════════════════════════════════════════
+//  POPUP
+// ════════════════════════════════════════════════════════════
+
+function closePopup() {
+    document.getElementById("popup").style.display = "none";
+}
+
+
+// ════════════════════════════════════════════════════════════
+//  REZEPT-KARTE (für die Grid-Ansicht)
+// ════════════════════════════════════════════════════════════
+
+function createRecipeCard(recipe) {
+    const totalTime = (recipe.prep_time || 0) + (recipe.cook_time || 0);
+    const imgUrl   = getImageUrl(recipe.image_path);
+
+    return `
+        <article class="recipe-card" onclick="location.href='recipe.html?id=${recipe.id}'">
+            <div class="card-image">
+                ${imgUrl
+                    ? `<img src="${imgUrl}" alt="${recipe.title}" onerror="this.parentElement.innerHTML='<div class=\\'card-no-image\\'>🍽️</div>'">`
+                    : `<div class="card-no-image">🍽️</div>`
+                }
+                ${recipe.category ? `<span class="card-tag">${recipe.category}</span>` : ""}
+            </div>
+            <div class="card-body">
+                <h3>${recipe.title}</h3>
+                <p class="card-description">${recipe.description || ""}</p>
+                <div class="card-meta">
+                    ${totalTime ? `<span>⏱ ${totalTime} Min.</span>` : ""}
+                    ${recipe.servings ? `<span>👥 ${recipe.servings} Port.</span>` : ""}
+                </div>
+            </div>
+        </article>
+    `;
+}
+
+
+// ════════════════════════════════════════════════════════════
+//  INDEX – Featured Recipe
+// ════════════════════════════════════════════════════════════
+
+async function loadFeaturedRecipe() {
+    const section = document.getElementById("featured-section");
+    if (!section) return;
+
+    try {
+        const recipes = await apiFetch("/recipes?limit=1");
+
+        if (!recipes.length) {
+            section.style.display = "none";
+            return;
+        }
+
+        const r      = recipes[0];
+        const imgUrl = getImageUrl(r.image_path);
+        const time   = (r.prep_time || 0) + (r.cook_time || 0);
+
+        section.innerHTML = `
+            <div class="recipe-image">
+                ${imgUrl
+                    ? `<img src="${imgUrl}" alt="${r.title}">`
+                    : `<div class="featured-no-image">🍽️</div>`
+                }
+            </div>
+            <div class="recipe-info">
+                <span class="recipe-tag">Rezept der Woche</span>
+                <h2>${r.title}</h2>
+                <p>${r.description || ""}</p>
+                <div class="featured-meta">
+                    ${time          ? `<span>⏱ ${time} Min.</span>`       : ""}
+                    ${r.servings    ? `<span>👥 ${r.servings} Portionen</span>` : ""}
+                    ${r.category    ? `<span>🏷 ${r.category}</span>`      : ""}
+                </div>
+                <a href="recipe.html?id=${r.id}" class="recipe-button">
+                    Ich will das au choche!
+                </a>
+            </div>
+        `;
+    } catch {
+        // Falls API nicht läuft – statischer Fallback
+        section.innerHTML = `
+            <div class="recipe-image">
+                <img src="images/WhatsApp Image 2026-05-11 at 15.05.21.jpeg" alt="Lachsfilet">
+            </div>
+            <div class="recipe-info">
+                <span class="recipe-tag">Rezept der Woche</span>
+                <h2>Der Sommerlicher Hit</h2>
+                <p>Lachsfilet mit Zitronenbutter und grilliertem Spargel,
+                   Pfirsich Ragout dazu Kräuterspätzli.</p>
+                <a href="#" class="recipe-button">Ich will das au choche!</a>
+            </div>
+        `;
+    }
+}
+
+
+// ════════════════════════════════════════════════════════════
+//  MENÜART – Kategorie-Karten Klick-Handler
+// ════════════════════════════════════════════════════════════
+
+// Aktuell aktive Kategorie merken
+let activeCategory = "";
+
+function filterByCategory(category) {
+    const cards     = document.querySelectorAll(".menuart-card");
+    const gridTitle = document.getElementById("grid-title");
+    const clicked   = [...cards].find(c => c.querySelector("span")?.textContent === category);
+
+    // Toggle: gleiche Kategorie nochmal → alles anzeigen
+    if (activeCategory === category) {
+        activeCategory = "";
+        cards.forEach(c => c.classList.remove("active-category"));
+        if (gridTitle) gridTitle.textContent = "Alle Rezepte";
+        loadRecipes("");
+        return;
+    }
+
+    // Neue Kategorie aktivieren
+    activeCategory = category;
+    cards.forEach(c => c.classList.remove("active-category"));
+    if (clicked) clicked.classList.add("active-category");
+    if (gridTitle) gridTitle.textContent = category;
+
+    scrollToRecipes();
+    loadRecipes(category);
+}
+
+function scrollToRecipes() {
+    const target = document.getElementById("rezepte-anker")
+                || document.querySelector(".all-recipes-section");
+    if (!target) return;
+
+    const rect = target.getBoundingClientRect();
+    // Nur scrollen wenn das Grid noch nicht im sichtbaren Bereich ist
+    if (rect.top < -50 || rect.top > window.innerHeight) {
+        const offset = rect.top + window.scrollY - 20;
+        window.scrollTo({ top: offset, behavior: "smooth" });
+    }
+}
+
+
+// ════════════════════════════════════════════════════════════
+//  INDEX – Rezept-Grid & Kategorie-Filter
+// ════════════════════════════════════════════════════════════
+
+async function loadRecipes(category = "") {
+    const grid     = document.getElementById("recipe-grid");
+    const noResult = document.getElementById("no-results");
+    if (!grid) return;
+
+    // 1. Aktuelle Höhe einfrieren damit kein Layout-Sprung entsteht
+    grid.style.minHeight = grid.offsetHeight + "px";
+
+    // 2. Ausblenden (fade-out)
+    grid.classList.add("fading");
+    await new Promise(r => setTimeout(r, 250));
+
+    grid.innerHTML = `<div class="grid-loading"><div class="spinner"></div><p>Laden …</p></div>`;
+    grid.classList.remove("fading");
+
+    try {
+        const url     = category ? `/recipes?category=${encodeURIComponent(category)}` : "/recipes";
+        const recipes = await apiFetch(url);
+
+        noResult.style.display = "none";
+
+        if (!recipes.length) {
+            grid.innerHTML = "";
+            noResult.style.display = "block";
+            return;
+        }
+
+        // 3. Einblenden – Karten animieren einzeln rein, Höhe wieder freigeben
+        grid.style.minHeight = "";
+        grid.innerHTML = recipes.map(createRecipeCard).join("");
+
+    } catch {
+        grid.style.minHeight = "";
+        grid.innerHTML = `
+            <div class="api-error">
+                <p>⚠️ Backend nicht erreichbar.</p>
+                <small>Starte den Server mit: <code>py -m uvicorn backend.main:app --reload</code></small>
+            </div>
+        `;
+    }
+}
+
+
+
+// ════════════════════════════════════════════════════════════
+//  INDEX – Live-Suche mit Dropdown
+// ════════════════════════════════════════════════════════════
+
+// Suchbegriff im Titel farbig hervorheben
+function highlightMatch(text, query) {
+    const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return text.replace(new RegExp(`(${escaped})`, "gi"), "<mark>$1</mark>");
+}
+
+// Dropdown schliessen
+function closeSearchDropdown() {
+    const box = document.getElementById("search-results");
+    if (!box) return;
+    box.classList.remove("open");
+    box.innerHTML = "";
+}
+
+// Dropdown mit Resultaten füllen und anzeigen
+async function showSearchDropdown(query) {
+    const box = document.getElementById("search-results");
+    if (!box) return;
+
+    if (query.length < 2) {
+        closeSearchDropdown();
+        return;
+    }
+
+    // Lade-Indikator
+    box.innerHTML = `<div class="search-loading"><div class="spinner-sm"></div></div>`;
+    box.classList.add("open");
+
+    try {
+        const results = await apiFetch(`/recipes/search?q=${encodeURIComponent(query)}`);
+
+        if (!results.length) {
+            box.innerHTML = `
+                <div class="search-no-results">
+                    😕 Kein Rezept gefunden für <strong>„${query}"</strong>
+                </div>`;
+            return;
+        }
+
+        // Max. 6 Treffer anzeigen
+        box.innerHTML = results.slice(0, 6).map(r => {
+            const imgUrl = getImageUrl(r.image_path);
+            const time   = (r.prep_time || 0) + (r.cook_time || 0);
+            return `
+                <a class="search-result-item" href="recipe.html?id=${r.id}">
+                    ${imgUrl
+                        ? `<img src="${imgUrl}" alt="${r.title}">`
+                        : `<div class="search-result-emoji">🍽️</div>`
+                    }
+                    <div class="search-result-info">
+                        <strong>${highlightMatch(r.title, query)}</strong>
+                        <small>
+                            ${r.category  ? `🏷 ${r.category}` : ""}
+                            ${time        ? ` &nbsp;·&nbsp; ⏱ ${time} Min.` : ""}
+                        </small>
+                    </div>
+                    <span class="search-result-arrow">→</span>
+                </a>
+            `;
+        }).join("");
+
+        // "Alle Ergebnisse" Link falls mehr als 6
+        if (results.length > 6) {
+            box.innerHTML += `
+                <a class="search-all-link" href="kategorien.html">
+                    Alle ${results.length} Ergebnisse anzeigen →
+                </a>`;
+        }
+
+    } catch {
+        box.innerHTML = `<div class="search-no-results">⚠️ Suche nicht verfügbar.</div>`;
+    }
+}
+
+// Für kategorien.html – Grid-Suche (unverändert)
+async function searchRecipes(query) {
+    const grid     = document.getElementById("recipe-grid");
+    const noResult = document.getElementById("no-results");
+    if (!grid) return;
+
+    try {
+        const results = await apiFetch(`/recipes/search?q=${encodeURIComponent(query)}`);
+        noResult.style.display = "none";
+        if (!results.length) {
+            grid.innerHTML = "";
+            noResult.style.display = "block";
+            return;
+        }
+        grid.innerHTML = results.map(createRecipeCard).join("");
+    } catch {
+        grid.innerHTML = `<div class="api-error"><p>⚠️ Suche nicht verfügbar.</p></div>`;
+    }
+}
+
+
+// ════════════════════════════════════════════════════════════
+//  RECIPE.HTML – Detailansicht
+// ════════════════════════════════════════════════════════════
+
+async function loadRecipeDetail() {
+    const container = document.getElementById("recipe-detail");
+    if (!container) return;
+
+    const params   = new URLSearchParams(window.location.search);
+    const recipeId = params.get("id");
+
+    if (!recipeId) {
+        container.innerHTML = `<p class="detail-error">Kein Rezept ausgewählt.</p>`;
+        return;
+    }
+
+    try {
+        const r      = await apiFetch(`/recipes/${recipeId}`);
+        const imgUrl = getImageUrl(r.image_path);
+        const prepT  = r.prep_time ? `${r.prep_time} Min.` : "–";
+        const cookT  = r.cook_time ? `${r.cook_time} Min.` : "–";
+
+        // Seitentitel anpassen
+        document.title = `${r.title} – Food Atelier`;
+
+        // Zutaten als HTML-Liste
+        const ingredientsHtml = (r.ingredients || [])
+            .map(i => `<li><span class="ingredient-amount">${i.amount}</span> ${i.name}</li>`)
+            .join("");
+
+        // Schritte als nummerierte Liste
+        const stepsHtml = (r.instructions || [])
+            .map((step, idx) => `
+                <li class="step">
+                    <span class="step-number">${idx + 1}</span>
+                    <p>${step}</p>
+                </li>
+            `)
+            .join("");
+
+        container.innerHTML = `
+            <div class="detail-layout">
+
+                <!-- ── Linke Spalte: Senkrechtes Bild ── -->
+                <div class="detail-image-col">
+                    ${imgUrl
+                        ? `<img src="${imgUrl}" alt="${r.title}">`
+                        : `<div class="detail-no-image">🍽️</div>`
+                    }
+                </div>
+
+                <!-- ── Rechte Spalte: Rezeptinhalt ── -->
+                <div class="detail-content-col">
+
+                    <header class="detail-header">
+                        ${r.category ? `<span class="recipe-tag">${r.category}</span>` : ""}
+                        <h1 class="detail-title">${r.title}</h1>
+                        ${r.description ? `<p class="detail-description">${r.description}</p>` : ""}
+
+                        <div class="detail-meta">
+                            <div class="meta-item">
+                                <span class="meta-icon">⏱</span>
+                                <span class="meta-label">Vorbereitung</span>
+                                <strong>${prepT}</strong>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-icon">🔥</span>
+                                <span class="meta-label">Kochzeit</span>
+                                <strong>${cookT}</strong>
+                            </div>
+                            ${r.servings ? `
+                            <div class="meta-item">
+                                <span class="meta-icon">👥</span>
+                                <span class="meta-label">Portionen</span>
+                                <strong>${r.servings}</strong>
+                            </div>` : ""}
+                        </div>
+                    </header>
+
+                    <div class="detail-body">
+                        <aside class="ingredients-box">
+                            <h2>Zutaten</h2>
+                            <ul class="ingredients-list">
+                                ${ingredientsHtml || "<li>Keine Angabe</li>"}
+                            </ul>
+                        </aside>
+
+                        <div class="instructions-box">
+                            <h2>Zubereitung</h2>
+                            <ol class="steps-list">
+                                ${stepsHtml || "<li class='step'><span class='step-number'>1</span><p>Keine Angabe</p></li>"}
+                            </ol>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        `;
+
+    } catch (err) {
+        container.innerHTML = `
+            <div class="detail-error">
+                <p>⚠️ Rezept konnte nicht geladen werden.</p>
+                <a href="index.html" class="recipe-button">← Zurück</a>
+            </div>
+        `;
+    }
+}
+
+
+// ════════════════════════════════════════════════════════════
+//  INIT – je nach Seite die richtige Funktion starten
+// ════════════════════════════════════════════════════════════
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const hasFeatured   = document.getElementById("featured-section") !== null;
+    const hasRecipeGrid = document.getElementById("recipe-grid")      !== null;
+    const hasSearch     = document.getElementById("search-input")     !== null;
+    const isDetail      = document.getElementById("recipe-detail")    !== null;
+
+    // ── Featured Rezept (index.html) ─────────────────────────
+    if (hasFeatured) {
+        loadFeaturedRecipe();
+    }
+
+    // ── Rezept-Grid (kategorien.html) ────────────────────────
+    if (hasRecipeGrid) {
+        loadRecipes();
+    }
+
+    // ── Suchfeld mit Dropdown (index.html) ──────────────────
+    if (hasSearch) {
+        const searchInput = document.getElementById("search-input");
+        let debounceTimer;
+
+        // Beim Tippen → Dropdown öffnen
+        searchInput.addEventListener("input", e => {
+            clearTimeout(debounceTimer);
+            const query = e.target.value.trim();
+            debounceTimer = setTimeout(() => showSearchDropdown(query), 300);
+        });
+
+        // Escape → Dropdown schliessen, Input leeren
+        searchInput.addEventListener("keydown", e => {
+            if (e.key === "Escape") {
+                closeSearchDropdown();
+                searchInput.value = "";
+            }
+        });
+
+        // Klick ausserhalb → Dropdown schliessen
+        document.addEventListener("click", e => {
+            const searchBox = document.querySelector(".search-box");
+            if (searchBox && !searchBox.contains(e.target)) {
+                closeSearchDropdown();
+            }
+        });
+
+        // Fokus → falls schon Text drin → Dropdown wieder zeigen
+        searchInput.addEventListener("focus", e => {
+            if (e.target.value.trim().length >= 2) {
+                showSearchDropdown(e.target.value.trim());
+            }
+        });
+    }
+
+    if (isDetail) {
+        // ── Rezept-Detailseite ───────────────────────────────
+        loadRecipeDetail();
+    }
+});

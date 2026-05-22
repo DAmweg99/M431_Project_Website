@@ -1,0 +1,22 @@
+# Datenbank-Zugangsdaten – niemals ins Repository!
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+
+# Hochgeladene Bilder (werden lokal gespeichert)
+images/uploads/
+
+# Setup-Script (nur für lokale Einrichtung)
+setup_db.py
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store

@@ -12,7 +12,11 @@ from .routers import recipes
 ROOT = Path(__file__).parent.parent
 
 # Datenbank-Tabellen automatisch erstellen
-models.Base.metadata.create_all(bind=engine)
+try:
+    models.Base.metadata.create_all(bind=engine)
+except Exception as e:
+    print(f"⚠️  DB nicht erreichbar beim Start: {e}")
+    print("   Stelle sicher dass DATABASE_URL korrekt gesetzt ist.")
 
 app = FastAPI(
     title="Food Atelier API",

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rezept erfassen – Food Atelier</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- ── Login Overlay ────────────────────────────────────── -->
+    <div class="admin-login-overlay" id="admin-login-overlay">
+        <div class="admin-login-box">
+            <h2> Admin-Bereich</h2>
+            <form onsubmit="checkAdminPassword(event)">
+                <input
+                    type="password"
+                    id="admin-password-input"
+                    placeholder="Passwort eingeben…"
+                    autocomplete="current-password"
+                >
+                <div class="admin-login-error" id="admin-login-error"></div>
+                <button type="submit">Einloggen</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ── Seiteninhalt (versteckt bis eingeloggt) ──────────── -->
+    <div id="admin-content" style="display:none">
+
+    <!-- ── Header ───────────────────────────────────────────── -->
+    <header>
+        <h1>Food Atelier</h1>
+        <nav>
+            <a href="index.html">Startseite</a>
+            <a href="#">Neuigkeiten</a>
+            <a href="kategorien.html">Kategorien</a>
+            <a href="#">Kochschule</a>
+            <a href="admin.html" class="nav-active nav-admin">+ Rezept</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="admin-wrapper">
+
+            <div class="admin-header">
+                <h2 class="admin-title">Neues Rezept erfassen</h2>
+                <p class="admin-subtitle">Fülle das Formular aus und speichere dein Rezept direkt in der Datenbank.</p>
+            </div>
+
+            <!-- ── Erfolgs / Fehler Meldung ──────────────────── -->
+            <div class="admin-toast" id="admin-toast"></div>
+
+            <!-- ── Formular ──────────────────────────────────── -->
+            <form class="admin-form" id="recipe-form" onsubmit="submitRecipe(event)">
+
+                <!-- Basisinfos -->
+                <div class="form-card">
+                    <h3 class="form-card-title">Basisinfos</h3>
+
+                    <div class="form-group">
+                        <label for="f-title">Titel <span class="required">*</span></label>
+                        <input type="text" id="f-title" placeholder="z.B. Spaghetti Carbonara" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="f-category">Kategorie <span class="required">*</span></label>
+                            <select id="f-category" required>
+                                <option value="" disabled selected>Wählen…</option>
+                                <option value="Fleisch">🥩 Fleisch</option>
+                                <option value="Fisch">🐟 Fisch</option>
+                                <option value="Geflügel">🍗 Geflügel</option>
+                                <option value="Vegi">🥦 Vegi</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="f-description">Beschreibung</label>
+                        <textarea id="f-description" rows="3" placeholder="Kurze, appetitliche Beschreibung des Rezepts…"></textarea>
+                    </div>
+                </div>
+
+                <!-- Zeiten & Portionen -->
+                <div class="form-card">
+                    <h3 class="form-card-title">Details</h3>
+
+                    <div class="form-row form-row-3">
+                        <div class="form-group">
+                            <label for="f-servings">👥 Portionen</label>
+                            <input type="number" id="f-servings" min="1" max="20" placeholder="2">
+                        </div>
+                        <div class="form-group">
+                            <label for="f-prep">⏱ Vorbereitung (Min.)</label>
+                            <input type="number" id="f-prep" min="0" placeholder="15">
+                        </div>
+                        <div class="form-group">
+                            <label for="f-cook">🔥 Kochzeit (Min.)</label>
+                            <input type="number" id="f-cook" min="0" placeholder="30">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Zutaten -->
+                <div class="form-card">
+                    <h3 class="form-card-title">Zutaten</h3>
+
+                    <div class="ingredients-list" id="ingredients-list">
+                        <!-- Zeilen werden per JS hinzugefügt -->
+                    </div>
+
+                    <button type="button" class="add-row-btn" onclick="addIngredientRow()">
+                        + Zutat hinzufügen
+                    </button>
+                </div>
+
+                <!-- Zubereitung -->
+                <div class="form-card">
+                    <h3 class="form-card-title">Zubereitung</h3>
+
+                    <ol class="steps-form-list" id="steps-list">
+                        <!-- Schritte werden per JS hinzugefügt -->
+                    </ol>
+
+                    <button type="button" class="add-row-btn" onclick="addInstructionStep()">
+                        + Schritt hinzufügen
+                    </button>
+                </div>
+
+                <!-- Bild -->
+                <div class="form-card">
+                    <h3 class="form-card-title">Bild</h3>
+
+                    <div class="image-upload-area" id="image-upload-area" onclick="document.getElementById('f-image').click()">
+                        <div class="upload-placeholder" id="upload-placeholder">
+                            <span class="upload-icon">📷</span>
+                            <p>Klicken oder Bild hierher ziehen</p>
+                            <small>JPG, PNG, WebP · max. ~10 MB</small>
+                        </div>
+                        <img class="image-preview" id="image-preview" src="" alt="Vorschau">
+                    </div>
+                    <input type="file" id="f-image" accept="image/jpeg,image/png,image/webp" style="display:none"
+                           onchange="handleImagePreview(this)">
+                </div>
+
+                <!-- Submit -->
+                <div class="form-actions">
+                    <button type="submit" class="submit-btn" id="submit-btn">
+                        💾 Rezept speichern
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </main>
+
+    </div><!-- end #admin-content -->
+
+    <script src="js/app.js"></script>
+</body>
+</html>

@@ -70,7 +70,7 @@ async function loadFeaturedRecipe() {
     if (!section) return;
 
     try {
-        const recipes = await apiFetch("/recipes?limit=1");
+        const recipes = await apiFetch("/recipes/?limit=1");
 
         if (!recipes.length) {
             section.style.display = "none";
@@ -185,7 +185,7 @@ async function loadRecipes(category = "") {
     grid.classList.remove("fading");
 
     try {
-        const url     = category ? `/recipes?category=${encodeURIComponent(category)}` : "/recipes";
+        const url     = category ? `/recipes/?category=${encodeURIComponent(category)}` : "/recipes/";
         const recipes = await apiFetch(url);
 
         noResult.style.display = "none";
@@ -644,7 +644,7 @@ async function submitRecipe(event) {
 
     try {
         // 1. Rezept anlegen
-        const res = await fetch(`${API_BASE}/recipes`, {
+        const res = await fetch(`${API_BASE}/recipes/`, {
             method:  "POST",
             headers: { "Content-Type": "application/json" },
             body:    JSON.stringify({ title, category, description, servings, prep_time, cook_time, ingredients, instructions }),

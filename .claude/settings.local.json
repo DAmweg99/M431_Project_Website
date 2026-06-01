@@ -19,7 +19,8 @@
       "Bash(curl -s -X POST \"https://insightful-nurturing-production-c40f.up.railway.app/api/recipes/\" -H \"Content-Type: application/json\" --data-binary \"@_temp_recipe.json\")",
       "Bash(curl -s -X POST \"https://insightful-nurturing-production-c40f.up.railway.app/api/recipes/1/image\" -F \"file=@images/Smashburger_tartufofries.jpeg;type=image/jpeg\")",
       "Bash(py -c \"import sys; sys.path.insert\\(0,'.'\\); from backend import main; print\\('Imports OK, UPLOAD_DIR =', main.UPLOAD_DIR\\)\")",
-      "Bash(git commit -m 'Make upload directory configurable via UPLOAD_DIR env var *)"
+      "Bash(git commit -m 'Make upload directory configurable via UPLOAD_DIR env var *)",
+      "Bash(git commit -m 'Fix API list endpoint behind HTTPS proxy *)"
     ]
   }
 }

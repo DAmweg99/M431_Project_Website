@@ -20,7 +20,11 @@
       "Bash(curl -s -X POST \"https://insightful-nurturing-production-c40f.up.railway.app/api/recipes/1/image\" -F \"file=@images/Smashburger_tartufofries.jpeg;type=image/jpeg\")",
       "Bash(py -c \"import sys; sys.path.insert\\(0,'.'\\); from backend import main; print\\('Imports OK, UPLOAD_DIR =', main.UPLOAD_DIR\\)\")",
       "Bash(git commit -m 'Make upload directory configurable via UPLOAD_DIR env var *)",
-      "Bash(git commit -m 'Fix API list endpoint behind HTTPS proxy *)"
+      "Bash(git commit -m 'Fix API list endpoint behind HTTPS proxy *)",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('Bild gespeichert unter:', d['image_path']\\)\")",
+      "Bash(curl -s \"https://insightful-nurturing-production-c40f.up.railway.app/api/recipes/1\")",
+      "Bash(curl -s -o /dev/null -w \"HTTP-Status: %{http_code}, Typ: %{content_type}, Groesse: %{size_download} Bytes\\\\n\" \"https://insightful-nurturing-production-c40f.up.railway.app/uploads/05f18d9444ca4261bee14be1e04a36ef.jpeg\")",
+      "Bash(git commit -m 'Add /index.html route so Startseite nav link works *)"
     ]
   }
 }

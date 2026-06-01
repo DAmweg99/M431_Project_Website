@@ -10,7 +10,10 @@
       "PowerShell(psql --version 2>$null)",
       "PowerShell($pgPath = Get-ChildItem \"C:\\\\Program Files\\\\PostgreSQL\" | Sort-Object Name -Descending | Select-Object -First 1; Write-Output \"Gefunden: $\\($pgPath.FullName\\)\"; & \"$\\($pgPath.FullName\\)\\\\bin\\\\psql.exe\" --version)",
       "PowerShell(py -m pip install aiofiles==23.2.1)",
-      "PowerShell(Start-Sleep -Seconds 3; $r = Invoke-WebRequest -Uri \"http://localhost:8000/\" -UseBasicParsing; Write-Output \"Status: $\\($r.StatusCode\\)\"; Write-Output \"Content-Type: $\\($r.Headers['Content-Type']\\)\")"
+      "PowerShell(Start-Sleep -Seconds 3; $r = Invoke-WebRequest -Uri \"http://localhost:8000/\" -UseBasicParsing; Write-Output \"Status: $\\($r.StatusCode\\)\"; Write-Output \"Content-Type: $\\($r.Headers['Content-Type']\\)\")",
+      "Bash(git add *)",
+      "Bash(git commit -m 'Add /api/health diagnostic endpoint and Railway DB compatibility *)",
+      "Bash(git push *)"
     ]
   }
 }

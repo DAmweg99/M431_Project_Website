@@ -2,9 +2,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from sqlalchemy import text
 from pathlib import Path
+import os
 
-from .database import engine
+from .database import engine, DATABASE_URL
 from . import models
 from .routers import recipes
 
@@ -35,6 +37,37 @@ app.add_middleware(
 
 # ── API Routes ─────────────────────────────────────────────────────────────────
 app.include_router(recipes.router, prefix="/api")
+
+
+# ── Diagnose-Endpunkt: zeigt DB-Status (Passwort wird maskiert) ────────────────
+@app.get("/api/health", tags=["Status"])
+def health():
+    raw = os.getenv("DATABASE_URL")
+    # Host aus der URL extrahieren (ohne Passwort zu zeigen)
+    safe_url = DATABASE_URL
+    if "@" in safe_url:
+        prefix, host_part = safe_url.split("@", 1)
+        scheme = prefix.split("://", 1)[0]
+        safe_url = f"{scheme}://***:***@{host_part}"
+
+    result = {
+        "database_url_gesetzt": raw is not None,
+        "verwendete_url": safe_url,
+        "db_verbindung": "unbekannt",
+    }
+
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+            # Anzahl Rezepte zählen
+            count = conn.execute(text("SELECT COUNT(*) FROM recipes")).scalar()
+            result["db_verbindung"] = "OK"
+            result["anzahl_rezepte"] = count
+    except Exception as e:
+        result["db_verbindung"] = "FEHLER"
+        result["fehler"] = str(e)[:300]
+
+    return result
 
 # ── Hochgeladene Bilder ────────────────────────────────────────────────────────
 UPLOAD_DIR = ROOT / "images" / "uploads"

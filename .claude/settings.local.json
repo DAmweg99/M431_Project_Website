@@ -13,7 +13,13 @@
       "PowerShell(Start-Sleep -Seconds 3; $r = Invoke-WebRequest -Uri \"http://localhost:8000/\" -UseBasicParsing; Write-Output \"Status: $\\($r.StatusCode\\)\"; Write-Output \"Content-Type: $\\($r.Headers['Content-Type']\\)\")",
       "Bash(git add *)",
       "Bash(git commit -m 'Add /api/health diagnostic endpoint and Railway DB compatibility *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(git pull *)",
+      "WebFetch(domain:insightful-nurturing-production-c40f.up.railway.app)",
+      "Bash(curl -s -X POST \"https://insightful-nurturing-production-c40f.up.railway.app/api/recipes/\" -H \"Content-Type: application/json\" --data-binary \"@_temp_recipe.json\")",
+      "Bash(curl -s -X POST \"https://insightful-nurturing-production-c40f.up.railway.app/api/recipes/1/image\" -F \"file=@images/Smashburger_tartufofries.jpeg;type=image/jpeg\")",
+      "Bash(py -c \"import sys; sys.path.insert\\(0,'.'\\); from backend import main; print\\('Imports OK, UPLOAD_DIR =', main.UPLOAD_DIR\\)\")",
+      "Bash(git commit -m 'Make upload directory configurable via UPLOAD_DIR env var *)"
     ]
   }
 }

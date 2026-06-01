@@ -10,12 +10,9 @@ from sqlalchemy.orm import Session
 from ..database import get_db
 from ..models import Recipe
 from ..schemas import RecipeCreate, RecipeUpdate, RecipeResponse
+from ..storage import UPLOAD_DIR
 
 router = APIRouter(prefix="/recipes", tags=["Rezepte"])
-
-# Ordner für hochgeladene Bilder
-UPLOAD_DIR = Path(__file__).parent.parent.parent / "images" / "uploads"
-UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 ALLOWED_TYPES = {"image/jpeg", "image/png", "image/webp"}
 

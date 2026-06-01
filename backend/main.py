@@ -9,6 +9,7 @@ import os
 from .database import engine, DATABASE_URL
 from . import models
 from .routers import recipes
+from .storage import UPLOAD_DIR
 
 # Pfade relativ zu backend/main.py
 ROOT = Path(__file__).parent.parent
@@ -69,9 +70,7 @@ def health():
 
     return result
 
-# ── Hochgeladene Bilder ────────────────────────────────────────────────────────
-UPLOAD_DIR = ROOT / "images" / "uploads"
-UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+# ── Hochgeladene Bilder (Pfad kommt aus backend/storage.py) ────────────────────
 app.mount("/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
 
 # ── Frontend HTML-Seiten ───────────────────────────────────────────────────────

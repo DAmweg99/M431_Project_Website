@@ -17,9 +17,27 @@ header {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
+/* Logo + Maskottchen nebeneinander zentriert */
+.logo-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 15px;
+}
+.logo-mascot {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    transition: transform 0.3s;
+}
+.logo-wrap:hover .logo-mascot {
+    transform: rotate(-6deg) scale(1.08);
+}
+
 /* Header für "Food Atelier" */
 header h1 {
-    margin-bottom: 15px;
+    margin-bottom: 0;
     font-family: 'Amatic SC', cursive;
     font-size: 64px;
     color: #d89b1d;
@@ -101,6 +119,27 @@ h3 {
     position: relative;
     overflow: visible; /* Dropdown darf über den Rand hinausragen */
     outline: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Maskottchen in der Hero-Sektion */
+.hero-mascot {
+    position: absolute;
+    right: 24px;
+    bottom: -10px;
+    width: 130px;
+    height: auto;
+    pointer-events: none;
+    filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.15));
+    animation: mascotBob 3s ease-in-out infinite;
+}
+@keyframes mascotBob {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-8px); }
+}
+
+/* Auf schmalen Bildschirmen ausblenden, damit nichts überlappt */
+@media (max-width: 600px) {
+    .hero-mascot { display: none; }
 }
 /* ════════════════════════════════════════════════════════════
    MENÜART – Kategorie-Karten (Fooby-Style)

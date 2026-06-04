@@ -799,6 +799,66 @@ async function checkAdminPassword(event) {
 function showAdminContent() {
     document.getElementById("admin-login-overlay").style.display = "none";
     document.getElementById("admin-content").style.display       = "block";
+    loadAdminRecipeList();
+}
+
+// ── Zentrale Rezept-Verwaltung (Liste + Löschen) ─────────────
+async function loadAdminRecipeList() {
+    const box = document.getElementById("admin-recipe-list");
+    if (!box) return;
+
+    box.innerHTML = `<p class="manage-loading">Rezepte werden geladen …</p>`;
+
+    try {
+        const recipes = await apiFetch("/recipes/?limit=100");
+
+        if (!recipes.length) {
+            box.innerHTML = `<p class="manage-empty">Noch keine Rezepte vorhanden.</p>`;
+            return;
+        }
+
+        box.innerHTML = recipes.map(r => {
+            const imgUrl = getImageUrl(r.image_path);
+            return `
+                <div class="manage-row" data-id="${r.id}">
+                    <div class="manage-thumb">
+                        ${imgUrl
+                            ? `<img src="${imgUrl}" alt="${escapeAttr(r.title)}">`
+                            : `<div class="manage-noimg"></div>`}
+                    </div>
+                    <div class="manage-info">
+                        <strong>${escapeHtml(r.title)}</strong>
+                        <small>${r.category ? escapeHtml(r.category) : "Ohne Kategorie"}</small>
+                    </div>
+                    <div class="manage-actions">
+                        <a class="manage-edit" href="recipe.html?id=${r.id}">Bearbeiten</a>
+                        <button type="button" class="manage-delete" onclick="deleteRecipeFromAdmin(${r.id})">Löschen</button>
+                    </div>
+                </div>
+            `;
+        }).join("");
+
+    } catch {
+        box.innerHTML = `<p class="manage-empty">Liste konnte nicht geladen werden.</p>`;
+    }
+}
+
+async function deleteRecipeFromAdmin(id) {
+    const row   = document.querySelector(`.manage-row[data-id="${id}"]`);
+    const title = row ? row.querySelector(".manage-info strong").textContent : "dieses Rezept";
+
+    if (!confirm(`Rezept „${title}" wirklich löschen?\nDas kann nicht rückgängig gemacht werden.`)) return;
+
+    try {
+        const res = await fetch(`${API_BASE}/recipes/${id}`, {
+            method:  "DELETE",
+            headers: { "X-Admin-Token": getAdminToken() },
+        });
+        if (!res.ok) throw new Error("Löschen fehlgeschlagen");
+        loadAdminRecipeList();
+    } catch (e) {
+        alert("Fehler beim Löschen: " + e.message);
+    }
 }
 
 // Admin abmelden: Token löschen und Seite neu laden
@@ -969,6 +1029,7 @@ async function submitRecipe(event) {
         document.getElementById("steps-list").innerHTML       = "";
         addIngredientRow();
         addInstructionStep();
+        loadAdminRecipeList();   // Verwaltungsliste aktualisieren
 
     } catch (err) {
         showToast(`${err.message}`, "error");

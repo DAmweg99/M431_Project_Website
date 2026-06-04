@@ -161,6 +161,19 @@
 
             </form>
 
+            <!-- ── Rezepte verwalten ─────────────────────────── -->
+            <section class="manage-section">
+                <div class="manage-header">
+                    <h2 class="admin-title">Rezepte verwalten</h2>
+                    <button type="button" class="refresh-btn" onclick="loadAdminRecipeList()">Aktualisieren</button>
+                </div>
+                <p class="admin-subtitle">Alle vorhandenen Rezepte bearbeiten oder löschen.</p>
+
+                <div class="admin-recipe-list" id="admin-recipe-list">
+                    <p class="manage-loading">Rezepte werden geladen …</p>
+                </div>
+            </section>
+
         </div>
     </main>
 

@@ -52,8 +52,8 @@ function createRecipeCard(recipe) {
         <article class="recipe-card" onclick="location.href='recipe.html?id=${recipe.id}'">
             <div class="card-image">
                 ${imgUrl
-                    ? `<img src="${imgUrl}" alt="${recipe.title}" onerror="this.parentElement.innerHTML='<div class=\\'card-no-image\\'>🍽️</div>'">`
-                    : `<div class="card-no-image">🍽️</div>`
+                    ? `<img src="${imgUrl}" alt="${recipe.title}" onerror="this.parentElement.innerHTML='<div class=\\'card-no-image\\'></div>'">`
+                    : `<div class="card-no-image"></div>`
                 }
                 ${recipe.category ? `<span class="card-tag">${recipe.category}</span>` : ""}
             </div>
@@ -61,8 +61,8 @@ function createRecipeCard(recipe) {
                 <h3>${recipe.title}</h3>
                 <p class="card-description">${recipe.description || ""}</p>
                 <div class="card-meta">
-                    ${totalTime ? `<span>⏱ ${totalTime} Min.</span>` : ""}
-                    ${recipe.servings ? `<span>👥 ${recipe.servings} Port.</span>` : ""}
+                    ${totalTime ? `<span>${totalTime} Min.</span>` : ""}
+                    ${recipe.servings ? `<span>${recipe.servings} Port.</span>` : ""}
                 </div>
             </div>
         </article>
@@ -94,7 +94,7 @@ async function loadFeaturedRecipe() {
             <div class="recipe-image">
                 ${imgUrl
                     ? `<img src="${imgUrl}" alt="${r.title}">`
-                    : `<div class="featured-no-image">🍽️</div>`
+                    : `<div class="featured-no-image"></div>`
                 }
             </div>
             <div class="recipe-info">
@@ -102,9 +102,9 @@ async function loadFeaturedRecipe() {
                 <h2>${r.title}</h2>
                 <p>${r.description || ""}</p>
                 <div class="featured-meta">
-                    ${time          ? `<span>⏱ ${time} Min.</span>`       : ""}
-                    ${r.servings    ? `<span>👥 ${r.servings} Portionen</span>` : ""}
-                    ${r.category    ? `<span>🏷 ${r.category}</span>`      : ""}
+                    ${time          ? `<span>${time} Min.</span>`       : ""}
+                    ${r.servings    ? `<span>${r.servings} Portionen</span>` : ""}
+                    ${r.category    ? `<span>${r.category}</span>`      : ""}
                 </div>
                 <a href="recipe.html?id=${r.id}" class="recipe-button">
                     Ich will das au choche!
@@ -213,7 +213,7 @@ async function loadRecipes(category = "") {
         grid.style.minHeight = "";
         grid.innerHTML = `
             <div class="api-error">
-                <p>⚠️ Backend nicht erreichbar.</p>
+                <p>Backend nicht erreichbar.</p>
                 <small>Starte den Server mit: <code>py -m uvicorn backend.main:app --reload</code></small>
             </div>
         `;
@@ -260,7 +260,7 @@ async function showSearchDropdown(query) {
         if (!results.length) {
             box.innerHTML = `
                 <div class="search-no-results">
-                    😕 Kein Rezept gefunden für <strong>„${query}"</strong>
+                    Kein Rezept gefunden für <strong>„${query}"</strong>
                 </div>`;
             return;
         }
@@ -273,13 +273,13 @@ async function showSearchDropdown(query) {
                 <a class="search-result-item" href="recipe.html?id=${r.id}">
                     ${imgUrl
                         ? `<img src="${imgUrl}" alt="${r.title}">`
-                        : `<div class="search-result-emoji">🍽️</div>`
+                        : `<div class="search-result-emoji"></div>`
                     }
                     <div class="search-result-info">
                         <strong>${highlightMatch(r.title, query)}</strong>
                         <small>
-                            ${r.category  ? `🏷 ${r.category}` : ""}
-                            ${time        ? ` &nbsp;·&nbsp; ⏱ ${time} Min.` : ""}
+                            ${r.category  ? `${r.category}` : ""}
+                            ${time        ? ` &nbsp;·&nbsp; ${time} Min.` : ""}
                         </small>
                     </div>
                     <span class="search-result-arrow">→</span>
@@ -296,7 +296,7 @@ async function showSearchDropdown(query) {
         }
 
     } catch {
-        box.innerHTML = `<div class="search-no-results">⚠️ Suche nicht verfügbar.</div>`;
+        box.innerHTML = `<div class="search-no-results">Suche nicht verfügbar.</div>`;
     }
 }
 
@@ -316,7 +316,7 @@ async function searchRecipes(query) {
         }
         grid.innerHTML = results.map(createRecipeCard).join("");
     } catch {
-        grid.innerHTML = `<div class="api-error"><p>⚠️ Suche nicht verfügbar.</p></div>`;
+        grid.innerHTML = `<div class="api-error"><p>Suche nicht verfügbar.</p></div>`;
     }
 }
 
@@ -444,7 +444,7 @@ async function loadRecipeDetail() {
                 <div class="detail-image-col">
                     ${imgUrl
                         ? `<img src="${imgUrl}" alt="${r.title}">`
-                        : `<div class="detail-no-image">🍽️</div>`
+                        : `<div class="detail-no-image"></div>`
                     }
                 </div>
 
@@ -454,7 +454,7 @@ async function loadRecipeDetail() {
                     <header class="detail-header">
                         ${isAdmin() ? `
                         <div class="admin-actions">
-                            <button class="edit-recipe-btn" onclick="startEditMode()">✏️ Bearbeiten</button>
+                            <button class="edit-recipe-btn" onclick="startEditMode()">Bearbeiten</button>
                             <button class="logout-btn" onclick="adminLogout()">Abmelden</button>
                         </div>` : ""}
                         ${r.category ? `<span class="recipe-tag">${r.category}</span>` : ""}
@@ -463,18 +463,15 @@ async function loadRecipeDetail() {
 
                         <div class="detail-meta">
                             <div class="meta-item">
-                                <span class="meta-icon">⏱</span>
                                 <span class="meta-label">Vorbereitung</span>
                                 <strong>${prepT}</strong>
                             </div>
                             <div class="meta-item">
-                                <span class="meta-icon">🔥</span>
                                 <span class="meta-label">Kochzeit</span>
                                 <strong>${cookT}</strong>
                             </div>
                             ${r.servings ? `
                             <div class="meta-item">
-                                <span class="meta-icon">👥</span>
                                 <span class="meta-label">Portionen</span>
                                 <strong id="meta-servings">${r.servings}</strong>
                             </div>` : ""}
@@ -513,7 +510,7 @@ async function loadRecipeDetail() {
     } catch (err) {
         container.innerHTML = `
             <div class="detail-error">
-                <p>⚠️ Rezept konnte nicht geladen werden.</p>
+                <p>Rezept konnte nicht geladen werden.</p>
                 <a href="index.html" class="recipe-button">← Zurück</a>
             </div>
         `;
@@ -557,18 +554,18 @@ function startEditMode() {
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>👥 Portionen</label>
+                    <label>Portionen</label>
                     <input type="number" id="edit-servings" min="1" value="${r.servings || ""}">
                 </div>
             </div>
 
             <div class="form-row form-row-3">
                 <div class="form-group">
-                    <label>⏱ Vorbereitung (Min.)</label>
+                    <label>Vorbereitung (Min.)</label>
                     <input type="number" id="edit-prep" min="0" value="${r.prep_time || ""}">
                 </div>
                 <div class="form-group">
-                    <label>🔥 Kochzeit (Min.)</label>
+                    <label>Kochzeit (Min.)</label>
                     <input type="number" id="edit-cook" min="0" value="${r.cook_time || ""}">
                 </div>
             </div>
@@ -589,7 +586,7 @@ function startEditMode() {
 
             <div class="edit-actions">
                 <button type="button" class="cancel-btn" onclick="loadRecipeDetail()">Abbrechen</button>
-                <button type="button" class="submit-btn" id="edit-save-btn" onclick="saveRecipeEdit()">💾 Speichern</button>
+                <button type="button" class="submit-btn" id="edit-save-btn" onclick="saveRecipeEdit()">Speichern</button>
             </div>
         </div>
     `;
@@ -665,7 +662,7 @@ async function saveRecipeEdit() {
         instructions,
     };
 
-    if (btn) { btn.disabled = true; btn.textContent = "⏳ Speichern…"; }
+    if (btn) { btn.disabled = true; btn.textContent = "Speichern…"; }
 
     try {
         const res = await fetch(`${API_BASE}/recipes/${currentRecipe.id}`, {
@@ -683,8 +680,8 @@ async function saveRecipeEdit() {
         // Erfolg → Detailansicht frisch laden
         loadRecipeDetail();
     } catch (e) {
-        if (toast) { toast.className = "admin-toast error"; toast.textContent = `❌ ${e.message}`; }
-        if (btn)   { btn.disabled = false; btn.textContent = "💾 Speichern"; }
+        if (toast) { toast.className = "admin-toast error"; toast.textContent = `${e.message}`; }
+        if (btn)   { btn.disabled = false; btn.textContent = "Speichern"; }
     }
 }
 
@@ -793,7 +790,7 @@ async function checkAdminPassword(event) {
         localStorage.setItem(TOKEN_KEY, data.token);
         showAdminContent();
     } catch {
-        error.textContent = "❌ Falsches Passwort";
+        error.textContent = "Falsches Passwort";
         document.getElementById("admin-password-input").value = "";
         document.getElementById("admin-password-input").focus();
     }
@@ -911,7 +908,7 @@ async function submitRecipe(event) {
 
     const btn = document.getElementById("submit-btn");
     btn.disabled    = true;
-    btn.textContent = "⏳ Wird gespeichert…";
+    btn.textContent = "Wird gespeichert…";
 
     // Daten aus Formular lesen
     const title       = document.getElementById("f-title").value.trim();
@@ -965,7 +962,7 @@ async function submitRecipe(event) {
         }
 
         // Erfolg anzeigen
-        showToast(`✅ Rezept „${recipe.title}" wurde gespeichert! <a href="recipe.html?id=${recipe.id}">Jetzt ansehen →</a>`, "success");
+        showToast(`Rezept „${recipe.title}" wurde gespeichert! <a href="recipe.html?id=${recipe.id}">Jetzt ansehen →</a>`, "success");
         document.getElementById("recipe-form").reset();
         document.getElementById("image-upload-area").classList.remove("has-image");
         document.getElementById("ingredients-list").innerHTML = "";
@@ -974,10 +971,10 @@ async function submitRecipe(event) {
         addInstructionStep();
 
     } catch (err) {
-        showToast(`❌ ${err.message}`, "error");
+        showToast(`${err.message}`, "error");
     } finally {
         btn.disabled    = false;
-        btn.textContent = "💾 Rezept speichern";
+        btn.textContent = "Rezept speichern";
     }
 }
 

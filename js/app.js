@@ -30,6 +30,36 @@ function escapeAttr(s) {
     return escapeHtml(s).replace(/"/g, "&quot;");
 }
 
+// ── Vollbild-Ansicht (Lightbox) für Bilder ───────────────────
+function openLightbox(src, alt) {
+    const overlay = document.createElement("div");
+    overlay.className = "lightbox-overlay";
+
+    const close = document.createElement("span");
+    close.className = "lightbox-close";
+    close.innerHTML = "&times;";
+
+    const img = document.createElement("img");
+    img.src = src;
+    img.alt = alt || "";
+
+    overlay.appendChild(close);
+    overlay.appendChild(img);
+
+    function doClose() {
+        overlay.remove();
+        document.body.style.overflow = "";
+        document.removeEventListener("keydown", onKey);
+    }
+    function onKey(e) { if (e.key === "Escape") doClose(); }
+
+    overlay.addEventListener("click", doClose);   // Klick irgendwo schliesst
+    document.addEventListener("keydown", onKey);  // Escape schliesst
+
+    document.body.appendChild(overlay);
+    document.body.style.overflow = "hidden";      // Hintergrund nicht scrollen
+}
+
 
 // ════════════════════════════════════════════════════════════
 //  POPUP
@@ -443,7 +473,7 @@ async function loadRecipeDetail() {
                 <!-- ── Linke Spalte: Senkrechtes Bild ── -->
                 <div class="detail-image-col">
                     ${imgUrl
-                        ? `<img src="${imgUrl}" alt="${r.title}">`
+                        ? `<img src="${imgUrl}" alt="${escapeAttr(r.title)}" class="zoomable" onclick="openLightbox(this.src, this.alt)">`
                         : `<div class="detail-no-image"></div>`
                     }
                 </div>

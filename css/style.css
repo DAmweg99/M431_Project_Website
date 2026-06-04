@@ -990,3 +990,391 @@ nav {
     font-family: 'Poppins', sans-serif;
     color: #c0392b;
 }
+
+/* ════════════════════════════════════════════════════════════
+   ADMIN – Rezept erfassen
+════════════════════════════════════════════════════════════ */
+
+/* ── Admin Login Overlay ─────────────────────────────────── */
+.admin-login-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(4px);
+}
+
+.admin-login-box {
+    background: white;
+    border-radius: 16px;
+    padding: 48px 44px;
+    width: 380px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    animation: popupFade 0.3s ease;
+}
+
+.admin-login-box h2 {
+    font-family: 'Amatic SC', cursive;
+    font-size: 42px;
+    color: #111;
+    margin-bottom: 6px;
+}
+
+.admin-login-box p {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    color: #999;
+    margin-bottom: 28px;
+}
+
+.admin-login-box input {
+    width: 100%;
+    padding: 13px 16px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    border: 1.5px solid #e0e0d8;
+    border-radius: 10px;
+    outline: none;
+    text-align: center;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+}
+
+.admin-login-box input:focus {
+    border-color: #88a63d;
+    box-shadow: 0 0 0 3px rgba(136,166,61,0.12);
+}
+
+.admin-login-box button {
+    width: 100%;
+    padding: 13px;
+    background: #111;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    margin-top: 4px;
+}
+
+.admin-login-box button:hover { background: #88a63d; }
+
+.admin-login-error {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    color: #e74c3c;
+    min-height: 18px;
+    margin-bottom: 6px;
+}
+
+/* Nav-Link "Admin" als grüner Button */
+.nav-admin {
+    background: #88a63d;
+    color: white !important;
+    padding: 7px 16px;
+    border-radius: 20px;
+    font-weight: 600 !important;
+    transition: 0.2s !important;
+}
+.nav-admin:hover {
+    background: #111;
+    color: white !important;
+}
+.nav-admin.nav-active {
+    border-bottom: none !important;
+}
+
+/* Wrapper */
+.admin-wrapper {
+    max-width: 800px;
+    margin: 32px auto 80px;
+    padding: 0 20px;
+}
+.admin-wrapper section,
+.admin-wrapper section:hover {
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+    transform: none;
+}
+
+.admin-header {
+    margin-bottom: 32px;
+}
+.admin-title {
+    font-family: 'Amatic SC', cursive;
+    font-size: 52px;
+    color: #111;
+    margin-bottom: 6px;
+}
+.admin-subtitle {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: #999;
+}
+
+/* Toast Meldung */
+.admin-toast {
+    display: none;
+    padding: 16px 22px;
+    border-radius: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 24px;
+    animation: toastIn 0.3s ease;
+}
+.admin-toast.success {
+    display: block;
+    background: #f0f7e6;
+    color: #4a7c1f;
+    border: 1px solid #c3dfa0;
+}
+.admin-toast.error {
+    display: block;
+    background: #fdf0ef;
+    color: #c0392b;
+    border: 1px solid #f5c6c3;
+}
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Form Cards */
+.form-card {
+    background: white;
+    border-radius: 14px;
+    padding: 28px 32px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    margin-bottom: 20px;
+}
+.form-card-title {
+    font-family: 'Amatic SC', cursive;
+    font-size: 30px;
+    color: #111;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f0f0e8;
+}
+
+/* Labels & Inputs */
+.form-group {
+    margin-bottom: 18px;
+}
+.form-group label {
+    display: block;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 6px;
+}
+.required { color: #88a63d; }
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    padding: 11px 14px;
+    border: 1.5px solid #e0e0d8;
+    border-radius: 8px;
+    background: #fafaf8;
+    color: #111;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    resize: vertical;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #88a63d;
+    box-shadow: 0 0 0 3px rgba(136,166,61,0.12);
+    background: white;
+}
+.form-group select { cursor: pointer; }
+
+/* Mehrspaltige Zeilen */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+.form-row-3 {
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+/* Zutaten Zeile */
+.ingredient-row {
+    display: grid;
+    grid-template-columns: 130px 1fr 36px;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+    animation: cardIn 0.2s ease both;
+}
+.ingredient-row input {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    padding: 10px 12px;
+    border: 1.5px solid #e0e0d8;
+    border-radius: 8px;
+    background: #fafaf8;
+    outline: none;
+    transition: border-color 0.2s;
+}
+.ingredient-row input:focus { border-color: #88a63d; }
+
+/* Schritte Liste */
+.steps-form-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.step-form-item {
+    display: grid;
+    grid-template-columns: 36px 1fr 36px;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    animation: cardIn 0.2s ease both;
+}
+.step-form-number {
+    width: 36px;
+    height: 36px;
+    background: #111;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 6px;
+}
+.step-form-item textarea {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    padding: 10px 12px;
+    border: 1.5px solid #e0e0d8;
+    border-radius: 8px;
+    background: #fafaf8;
+    outline: none;
+    resize: vertical;
+    min-height: 60px;
+    transition: border-color 0.2s;
+}
+.step-form-item textarea:focus { border-color: #88a63d; }
+
+/* Löschen-Button (× für Zutaten & Schritte) */
+.remove-btn {
+    width: 36px;
+    height: 36px;
+    background: #fff0f0;
+    border: none;
+    border-radius: 8px;
+    color: #e74c3c;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+    flex-shrink: 0;
+    margin-top: 6px;
+}
+.remove-btn:hover { background: #e74c3c; color: white; }
+
+/* Zeile/Schritt hinzufügen Button */
+.add-row-btn {
+    background: none;
+    border: 1.5px dashed #c0c8a8;
+    border-radius: 8px;
+    padding: 10px 18px;
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #88a63d;
+    cursor: pointer;
+    margin-top: 4px;
+    transition: 0.2s;
+}
+.add-row-btn:hover {
+    background: #f4f7ee;
+    border-color: #88a63d;
+}
+
+/* Bild Upload */
+.image-upload-area {
+    border: 2px dashed #d0d8c0;
+    border-radius: 12px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s;
+    background: #fafaf8;
+    position: relative;
+    overflow: hidden;
+    min-height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.image-upload-area:hover {
+    border-color: #88a63d;
+    background: #f4f7ee;
+}
+.upload-placeholder { pointer-events: none; }
+.upload-icon { font-size: 40px; display: block; margin-bottom: 8px; }
+.upload-placeholder p {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: #555;
+    margin: 0 0 4px;
+}
+.upload-placeholder small { color: #aaa; font-size: 12px; }
+.image-preview {
+    display: none;
+    width: 100%;
+    max-height: 260px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+.image-upload-area.has-image { padding: 0; }
+.image-upload-area.has-image .upload-placeholder { display: none; }
+.image-upload-area.has-image .image-preview { display: block; }
+
+/* Submit Button */
+.form-actions { text-align: right; margin-top: 8px; }
+.submit-btn {
+    background: #111;
+    color: white;
+    border: none;
+    padding: 15px 36px;
+    border-radius: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    min-width: 200px;
+}
+.submit-btn:hover  { background: #88a63d; }
+.submit-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+

@@ -2,8 +2,9 @@
 //  Food Atelier – Frontend API Integration
 // ════════════════════════════════════════════════════════════
 
-const API_BASE = "http://localhost:8000/api";
-const IMG_BASE = "http://localhost:8000/uploads";
+// Relative URL – funktioniert lokal (localhost:8000) und in der Cloud
+const API_BASE = "/api";
+const IMG_BASE = "/uploads";
 
 // ── Bild-URL aus gespeichertem Pfad ──────────────────────────────
 function getImageUrl(imagePath) {
@@ -69,7 +70,7 @@ async function loadFeaturedRecipe() {
     if (!section) return;
 
     try {
-        const recipes = await apiFetch("/recipes?limit=1");
+        const recipes = await apiFetch("/recipes/?limit=1");
 
         if (!recipes.length) {
             section.style.display = "none";
@@ -184,7 +185,7 @@ async function loadRecipes(category = "") {
     grid.classList.remove("fading");
 
     try {
-        const url     = category ? `/recipes?category=${encodeURIComponent(category)}` : "/recipes";
+        const url     = category ? `/recipes/?category=${encodeURIComponent(category)}` : "/recipes/";
         const recipes = await apiFetch(url);
 
         noResult.style.display = "none";
@@ -482,4 +483,208 @@ document.addEventListener("DOMContentLoaded", () => {
         // ── Rezept-Detailseite ───────────────────────────────
         loadRecipeDetail();
     }
+
+    if (document.getElementById("recipe-form")) {
+        // ── Admin-Seite ──────────────────────────────────────
+        initAdminForm();
+    }
 });
+
+
+// ════════════════════════════════════════════════════════════
+//  ADMIN – Login
+// ════════════════════════════════════════════════════════════
+
+const ADMIN_PASSWORD = "FoodAtelier2026";   // ← Passwort hier ändern
+const SESSION_KEY    = "fa_admin_auth";
+
+function checkAdminPassword(event) {
+    event.preventDefault();
+    const input = document.getElementById("admin-password-input").value;
+    const error = document.getElementById("admin-login-error");
+
+    if (input === ADMIN_PASSWORD) {
+        sessionStorage.setItem(SESSION_KEY, "1");
+        showAdminContent();
+    } else {
+        error.textContent = "❌ Falsches Passwort";
+        document.getElementById("admin-password-input").value = "";
+        document.getElementById("admin-password-input").focus();
+    }
+}
+
+function showAdminContent() {
+    document.getElementById("admin-login-overlay").style.display = "none";
+    document.getElementById("admin-content").style.display       = "block";
+}
+
+
+// ════════════════════════════════════════════════════════════
+//  ADMIN – Rezept erfassen
+// ════════════════════════════════════════════════════════════
+
+function initAdminForm() {
+    // Bereits eingeloggt? → direkt zeigen
+    if (sessionStorage.getItem(SESSION_KEY) === "1") {
+        showAdminContent();
+    }
+    addIngredientRow();   // 1 leere Zeile zu Beginn
+    addInstructionStep(); // 1 leerer Schritt zu Beginn
+
+    // Drag & Drop auf Upload-Area
+    const area = document.getElementById("image-upload-area");
+    area.addEventListener("dragover",  e => { e.preventDefault(); area.style.borderColor = "#88a63d"; });
+    area.addEventListener("dragleave", () => { area.style.borderColor = ""; });
+    area.addEventListener("drop", e => {
+        e.preventDefault();
+        area.style.borderColor = "";
+        const file = e.dataTransfer.files[0];
+        if (file) applyImagePreview(file);
+    });
+}
+
+// ── Zutat hinzufügen ─────────────────────────────────────────
+function addIngredientRow() {
+    const list = document.getElementById("ingredients-list");
+    const row  = document.createElement("div");
+    row.className = "ingredient-row";
+    row.innerHTML = `
+        <input type="text" placeholder="Menge (z.B. 200g)" class="ing-amount">
+        <input type="text" placeholder="Zutat (z.B. Spaghetti)"  class="ing-name">
+        <button type="button" class="remove-btn" onclick="removeRow(this)" title="Entfernen">×</button>
+    `;
+    list.appendChild(row);
+    row.querySelector(".ing-amount").focus();
+}
+
+// ── Schritt hinzufügen ───────────────────────────────────────
+function addInstructionStep() {
+    const list  = document.getElementById("steps-list");
+    const index = list.children.length + 1;
+    const item  = document.createElement("li");
+    item.className = "step-form-item";
+    item.innerHTML = `
+        <span class="step-form-number">${index}</span>
+        <textarea placeholder="Schritt ${index} beschreiben…" rows="2"></textarea>
+        <button type="button" class="remove-btn" onclick="removeRow(this)" title="Entfernen">×</button>
+    `;
+    list.appendChild(item);
+    item.querySelector("textarea").focus();
+    updateStepNumbers();
+}
+
+// ── Zeile / Schritt entfernen ────────────────────────────────
+function removeRow(btn) {
+    btn.closest(".ingredient-row, .step-form-item").remove();
+    updateStepNumbers();
+}
+
+function updateStepNumbers() {
+    document.querySelectorAll(".step-form-number").forEach((el, i) => {
+        el.textContent = i + 1;
+    });
+    document.querySelectorAll(".step-form-item textarea").forEach((el, i) => {
+        el.placeholder = `Schritt ${i + 1} beschreiben…`;
+    });
+}
+
+// ── Bild Vorschau ────────────────────────────────────────────
+function handleImagePreview(input) {
+    if (input.files && input.files[0]) {
+        applyImagePreview(input.files[0]);
+    }
+}
+
+function applyImagePreview(file) {
+    const input = document.getElementById("f-image");
+
+    // DataTransfer trick: Datei aus Drag & Drop ins file input setzen
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    input.files = dt.files;
+
+    const reader = new FileReader();
+    reader.onload = e => {
+        const area    = document.getElementById("image-upload-area");
+        const preview = document.getElementById("image-preview");
+        preview.src   = e.target.result;
+        area.classList.add("has-image");
+    };
+    reader.readAsDataURL(file);
+}
+
+// ── Formular absenden ────────────────────────────────────────
+async function submitRecipe(event) {
+    event.preventDefault();
+
+    const btn = document.getElementById("submit-btn");
+    btn.disabled    = true;
+    btn.textContent = "⏳ Wird gespeichert…";
+
+    // Daten aus Formular lesen
+    const title       = document.getElementById("f-title").value.trim();
+    const category    = document.getElementById("f-category").value;
+    const description = document.getElementById("f-description").value.trim();
+    const servings    = parseInt(document.getElementById("f-servings").value) || null;
+    const prep_time   = parseInt(document.getElementById("f-prep").value)     || null;
+    const cook_time   = parseInt(document.getElementById("f-cook").value)     || null;
+
+    // Zutaten
+    const ingredients = [...document.querySelectorAll(".ingredient-row")]
+        .map(row => ({
+            amount: row.querySelector(".ing-amount").value.trim(),
+            name:   row.querySelector(".ing-name").value.trim(),
+        }))
+        .filter(i => i.name);
+
+    // Schritte
+    const instructions = [...document.querySelectorAll(".step-form-item textarea")]
+        .map(ta => ta.value.trim())
+        .filter(s => s);
+
+    try {
+        // 1. Rezept anlegen
+        const res = await fetch(`${API_BASE}/recipes/`, {
+            method:  "POST",
+            headers: { "Content-Type": "application/json" },
+            body:    JSON.stringify({ title, category, description, servings, prep_time, cook_time, ingredients, instructions }),
+        });
+
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.detail || "Fehler beim Speichern");
+        }
+
+        const recipe = await res.json();
+
+        // 2. Bild hochladen (falls vorhanden)
+        const imageFile = document.getElementById("f-image").files[0];
+        if (imageFile) {
+            const form = new FormData();
+            form.append("file", imageFile);
+            await fetch(`${API_BASE}/recipes/${recipe.id}/image`, { method: "POST", body: form });
+        }
+
+        // Erfolg anzeigen
+        showToast(`✅ Rezept „${recipe.title}" wurde gespeichert! <a href="recipe.html?id=${recipe.id}">Jetzt ansehen →</a>`, "success");
+        document.getElementById("recipe-form").reset();
+        document.getElementById("image-upload-area").classList.remove("has-image");
+        document.getElementById("ingredients-list").innerHTML = "";
+        document.getElementById("steps-list").innerHTML       = "";
+        addIngredientRow();
+        addInstructionStep();
+
+    } catch (err) {
+        showToast(`❌ ${err.message}`, "error");
+    } finally {
+        btn.disabled    = false;
+        btn.textContent = "💾 Rezept speichern";
+    }
+}
+
+function showToast(html, type) {
+    const toast   = document.getElementById("admin-toast");
+    toast.innerHTML  = html;
+    toast.className  = `admin-toast ${type}`;
+    toast.scrollIntoView({ behavior: "smooth", block: "center" });
+}

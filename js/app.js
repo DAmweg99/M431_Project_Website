@@ -452,7 +452,11 @@ async function loadRecipeDetail() {
                 <div class="detail-content-col">
 
                     <header class="detail-header">
-                        ${isAdmin() ? `<button class="edit-recipe-btn" onclick="startEditMode()">✏️ Bearbeiten</button>` : ""}
+                        ${isAdmin() ? `
+                        <div class="admin-actions">
+                            <button class="edit-recipe-btn" onclick="startEditMode()">✏️ Bearbeiten</button>
+                            <button class="logout-btn" onclick="adminLogout()">Abmelden</button>
+                        </div>` : ""}
                         ${r.category ? `<span class="recipe-tag">${r.category}</span>` : ""}
                         <h1 class="detail-title">${r.title}</h1>
                         ${r.description ? `<p class="detail-description">${r.description}</p>` : ""}
@@ -798,6 +802,12 @@ async function checkAdminPassword(event) {
 function showAdminContent() {
     document.getElementById("admin-login-overlay").style.display = "none";
     document.getElementById("admin-content").style.display       = "block";
+}
+
+// Admin abmelden: Token löschen und Seite neu laden
+function adminLogout() {
+    localStorage.removeItem(TOKEN_KEY);
+    location.reload();
 }
 
 

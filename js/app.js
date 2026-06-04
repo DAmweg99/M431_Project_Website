@@ -21,6 +21,15 @@ async function apiFetch(path) {
     return res.json();
 }
 
+// ── HTML-Escaping (sicheres Einsetzen von Werten) ─────────────────
+function escapeHtml(s) {
+    return String(s == null ? "" : s)
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+function escapeAttr(s) {
+    return escapeHtml(s).replace(/"/g, "&quot;");
+}
+
 
 // ════════════════════════════════════════════════════════════
 //  POPUP
@@ -320,6 +329,7 @@ async function searchRecipes(query) {
 let baseServings    = 1;   // Original-Portionen aus dem Rezept
 let currentServings = 1;   // Aktuell gewählte Portionen
 let baseIngredients = [];  // Original-Zutaten (Basis für die Skalierung)
+let currentRecipe   = null; // Aktuell geladenes Rezept (für den Edit-Modus)
 
 // Skaliert eine Mengenangabe (Freitext) um den Faktor.
 // Zahlen am Anfang werden multipliziert, reiner Text bleibt unverändert.
@@ -400,6 +410,7 @@ async function loadRecipeDetail() {
 
     try {
         const r      = await apiFetch(`/recipes/${recipeId}`);
+        currentRecipe = r;   // für den Edit-Modus merken
         const imgUrl = getImageUrl(r.image_path);
         const prepT  = r.prep_time ? `${r.prep_time} Min.` : "–";
         const cookT  = r.cook_time ? `${r.cook_time} Min.` : "–";
@@ -441,6 +452,7 @@ async function loadRecipeDetail() {
                 <div class="detail-content-col">
 
                     <header class="detail-header">
+                        ${isAdmin() ? `<button class="edit-recipe-btn" onclick="startEditMode()">✏️ Bearbeiten</button>` : ""}
                         ${r.category ? `<span class="recipe-tag">${r.category}</span>` : ""}
                         <h1 class="detail-title">${r.title}</h1>
                         ${r.description ? `<p class="detail-description">${r.description}</p>` : ""}
@@ -501,6 +513,171 @@ async function loadRecipeDetail() {
                 <a href="index.html" class="recipe-button">← Zurück</a>
             </div>
         `;
+    }
+}
+
+
+// ════════════════════════════════════════════════════════════
+//  RECIPE.HTML – Inline-Editiermodus (nur Admin)
+// ════════════════════════════════════════════════════════════
+
+function startEditMode() {
+    if (!isAdmin() || !currentRecipe) return;
+    const r   = currentRecipe;
+    const col = document.querySelector(".detail-content-col");
+    if (!col) return;
+
+    const categories = ["Fleisch", "Fisch", "Geflügel", "Vegi"];
+    // Falls die Rezept-Kategorie nicht in der Liste ist, trotzdem als Option anbieten
+    if (r.category && !categories.includes(r.category)) categories.unshift(r.category);
+
+    col.innerHTML = `
+        <div class="edit-form">
+            <h2 class="edit-form-title">Rezept bearbeiten</h2>
+
+            <div class="form-group">
+                <label>Titel</label>
+                <input type="text" id="edit-title" value="${escapeAttr(r.title)}">
+            </div>
+
+            <div class="form-group">
+                <label>Beschreibung</label>
+                <textarea id="edit-description" rows="3">${escapeHtml(r.description)}</textarea>
+            </div>
+
+            <div class="form-row form-row-3">
+                <div class="form-group">
+                    <label>Kategorie</label>
+                    <select id="edit-category">
+                        ${categories.map(c => `<option value="${escapeAttr(c)}" ${r.category === c ? "selected" : ""}>${escapeHtml(c)}</option>`).join("")}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>👥 Portionen</label>
+                    <input type="number" id="edit-servings" min="1" value="${r.servings || ""}">
+                </div>
+            </div>
+
+            <div class="form-row form-row-3">
+                <div class="form-group">
+                    <label>⏱ Vorbereitung (Min.)</label>
+                    <input type="number" id="edit-prep" min="0" value="${r.prep_time || ""}">
+                </div>
+                <div class="form-group">
+                    <label>🔥 Kochzeit (Min.)</label>
+                    <input type="number" id="edit-cook" min="0" value="${r.cook_time || ""}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Zutaten</label>
+                <div id="edit-ingredients"></div>
+                <button type="button" class="add-row-btn" onclick="addEditIngredient()">+ Zutat hinzufügen</button>
+            </div>
+
+            <div class="form-group">
+                <label>Zubereitung</label>
+                <ol id="edit-steps" class="steps-form-list"></ol>
+                <button type="button" class="add-row-btn" onclick="addEditStep()">+ Schritt hinzufügen</button>
+            </div>
+
+            <div class="admin-toast" id="edit-toast"></div>
+
+            <div class="edit-actions">
+                <button type="button" class="cancel-btn" onclick="loadRecipeDetail()">Abbrechen</button>
+                <button type="button" class="submit-btn" id="edit-save-btn" onclick="saveRecipeEdit()">💾 Speichern</button>
+            </div>
+        </div>
+    `;
+
+    // Zutaten vorbefüllen
+    const ings = r.ingredients || [];
+    if (ings.length) ings.forEach(i => addEditIngredient(i.amount, i.name));
+    else addEditIngredient();
+
+    // Schritte vorbefüllen
+    const steps = r.instructions || [];
+    if (steps.length) steps.forEach(s => addEditStep(s));
+    else addEditStep();
+
+    col.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function addEditIngredient(amount = "", name = "") {
+    const list = document.getElementById("edit-ingredients");
+    if (!list) return;
+    const row = document.createElement("div");
+    row.className = "ingredient-row";
+    row.innerHTML = `
+        <input type="text" class="ing-amount" placeholder="Menge" value="${escapeAttr(amount)}">
+        <input type="text" class="ing-name" placeholder="Zutat" value="${escapeAttr(name)}">
+        <button type="button" class="remove-btn" onclick="this.closest('.ingredient-row').remove()">×</button>
+    `;
+    list.appendChild(row);
+}
+
+function addEditStep(text = "") {
+    const list = document.getElementById("edit-steps");
+    if (!list) return;
+    const item = document.createElement("li");
+    item.className = "step-form-item";
+    item.innerHTML = `
+        <span class="step-form-number">${list.children.length + 1}</span>
+        <textarea rows="2" placeholder="Schritt beschreiben…">${escapeHtml(text)}</textarea>
+        <button type="button" class="remove-btn" onclick="this.closest('.step-form-item').remove(); renumberEditSteps();">×</button>
+    `;
+    list.appendChild(item);
+}
+
+function renumberEditSteps() {
+    document.querySelectorAll("#edit-steps .step-form-number")
+        .forEach((el, i) => { el.textContent = i + 1; });
+}
+
+async function saveRecipeEdit() {
+    if (!currentRecipe) return;
+    const btn   = document.getElementById("edit-save-btn");
+    const toast = document.getElementById("edit-toast");
+
+    const ingredients = [...document.querySelectorAll("#edit-ingredients .ingredient-row")]
+        .map(row => ({
+            amount: row.querySelector(".ing-amount").value.trim(),
+            name:   row.querySelector(".ing-name").value.trim(),
+        }))
+        .filter(i => i.name);
+
+    const instructions = [...document.querySelectorAll("#edit-steps textarea")]
+        .map(t => t.value.trim())
+        .filter(s => s);
+
+    const payload = {
+        title:       document.getElementById("edit-title").value.trim(),
+        description: document.getElementById("edit-description").value.trim(),
+        category:    document.getElementById("edit-category").value,
+        servings:    parseInt(document.getElementById("edit-servings").value) || null,
+        prep_time:   parseInt(document.getElementById("edit-prep").value)     || null,
+        cook_time:   parseInt(document.getElementById("edit-cook").value)     || null,
+        ingredients,
+        instructions,
+    };
+
+    if (btn) { btn.disabled = true; btn.textContent = "⏳ Speichern…"; }
+
+    try {
+        const res = await fetch(`${API_BASE}/recipes/${currentRecipe.id}`, {
+            method:  "PUT",
+            headers: { "Content-Type": "application/json" },
+            body:    JSON.stringify(payload),
+        });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.detail || "Speichern fehlgeschlagen");
+        }
+        // Erfolg → Detailansicht frisch laden
+        loadRecipeDetail();
+    } catch (e) {
+        if (toast) { toast.className = "admin-toast error"; toast.textContent = `❌ ${e.message}`; }
+        if (btn)   { btn.disabled = false; btn.textContent = "💾 Speichern"; }
     }
 }
 
@@ -581,13 +758,18 @@ document.addEventListener("DOMContentLoaded", () => {
 const ADMIN_PASSWORD = "FoodAtelier2026";   // ← Passwort hier ändern
 const SESSION_KEY    = "fa_admin_auth";
 
+// Ist der aktuelle Besucher als Admin angemeldet?
+function isAdmin() {
+    return localStorage.getItem(SESSION_KEY) === "1";
+}
+
 function checkAdminPassword(event) {
     event.preventDefault();
     const input = document.getElementById("admin-password-input").value;
     const error = document.getElementById("admin-login-error");
 
     if (input === ADMIN_PASSWORD) {
-        sessionStorage.setItem(SESSION_KEY, "1");
+        localStorage.setItem(SESSION_KEY, "1");
         showAdminContent();
     } else {
         error.textContent = "❌ Falsches Passwort";
@@ -608,7 +790,7 @@ function showAdminContent() {
 
 function initAdminForm() {
     // Bereits eingeloggt? → direkt zeigen
-    if (sessionStorage.getItem(SESSION_KEY) === "1") {
+    if (isAdmin()) {
         showAdminContent();
     }
     addIngredientRow();   // 1 leere Zeile zu Beginn

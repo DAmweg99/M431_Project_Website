@@ -39,13 +39,14 @@ app.add_middleware(
 )
 
 
-# ── Cache-Control für JS/CSS ───────────────────────────────────────────────────
+# ── Cache-Control für HTML/JS/CSS ──────────────────────────────────────────────
 # "no-cache" = Browser muss vor Nutzung beim Server nachfragen (ETag-Abgleich).
-# Verhindert, dass nach einem Deploy eine alte JS/CSS-Version angezeigt wird.
+# Verhindert, dass nach einem Deploy eine alte Version angezeigt wird.
 @app.middleware("http")
 async def revalidate_static_assets(request, call_next):
     response = await call_next(request)
-    if request.url.path.startswith(("/js/", "/css/")):
+    path = request.url.path
+    if path.startswith(("/js/", "/css/")) or path == "/" or path.endswith(".html"):
         response.headers["Cache-Control"] = "no-cache"
     return response
 

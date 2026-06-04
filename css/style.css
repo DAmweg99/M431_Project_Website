@@ -1626,7 +1626,12 @@ nav {
 .image-upload-area.has-image .image-preview { display: block; }
 
 /* Submit Button */
-.form-actions { text-align: right; margin-top: 8px; }
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 8px;
+}
 .submit-btn {
     background: #111;
     color: white;

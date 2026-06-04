@@ -51,7 +51,7 @@
 
             <div class="admin-header">
                 <div>
-                    <h2 class="admin-title">Neues Rezept erfassen</h2>
+                    <h2 class="admin-title" id="form-title">Neues Rezept erfassen</h2>
                     <p class="admin-subtitle">Fülle das Formular aus und speichere dein Rezept direkt in der Datenbank.</p>
                 </div>
                 <button type="button" class="logout-btn" onclick="adminLogout()">Abmelden</button>
@@ -154,6 +154,9 @@
 
                 <!-- Submit -->
                 <div class="form-actions">
+                    <button type="button" class="cancel-btn" id="cancel-edit-btn" style="display:none" onclick="exitFormEditMode()">
+                        Abbrechen
+                    </button>
                     <button type="submit" class="submit-btn" id="submit-btn">
                         Rezept speichern
                     </button>

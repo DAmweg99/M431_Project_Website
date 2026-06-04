@@ -831,7 +831,7 @@ async function loadAdminRecipeList() {
                         <small>${r.category ? escapeHtml(r.category) : "Ohne Kategorie"}</small>
                     </div>
                     <div class="manage-actions">
-                        <a class="manage-edit" href="recipe.html?id=${r.id}">Bearbeiten</a>
+                        <button type="button" class="manage-edit" onclick="editRecipeInAdmin(${r.id})">Bearbeiten</button>
                         <button type="button" class="manage-delete" onclick="deleteRecipeFromAdmin(${r.id})">Löschen</button>
                     </div>
                 </div>
@@ -892,33 +892,105 @@ function initAdminForm() {
     });
 }
 
-// ── Zutat hinzufügen ─────────────────────────────────────────
-function addIngredientRow() {
+// ── Bearbeiten direkt im Admin-Formular ──────────────────────
+let editingId = null;   // null = Neuanlage, sonst ID des bearbeiteten Rezepts
+
+async function editRecipeInAdmin(id) {
+    try {
+        const r = await apiFetch(`/recipes/${id}`);
+        editingId = id;
+
+        document.getElementById("f-title").value      = r.title || "";
+        document.getElementById("f-description").value = r.description || "";
+        document.getElementById("f-category").value    = r.category || "";
+        document.getElementById("f-servings").value    = r.servings || "";
+        document.getElementById("f-prep").value        = r.prep_time || "";
+        document.getElementById("f-cook").value        = r.cook_time || "";
+
+        // Zutaten vorbefüllen
+        const ingList = document.getElementById("ingredients-list");
+        ingList.innerHTML = "";
+        const ings = r.ingredients || [];
+        if (ings.length) ings.forEach(i => addIngredientRow(i.amount, i.name));
+        else addIngredientRow();
+
+        // Schritte vorbefüllen
+        const stepList = document.getElementById("steps-list");
+        stepList.innerHTML = "";
+        const steps = r.instructions || [];
+        if (steps.length) steps.forEach(s => addInstructionStep(s));
+        else addInstructionStep();
+
+        // Bildvorschau (vorhandenes Bild zeigen)
+        const area   = document.getElementById("image-upload-area");
+        const imgUrl = getImageUrl(r.image_path);
+        if (imgUrl) {
+            document.getElementById("image-preview").src = imgUrl;
+            area.classList.add("has-image");
+        } else {
+            area.classList.remove("has-image");
+        }
+        document.getElementById("f-image").value = "";   // kein neues Bild ausgewählt
+
+        enterFormEditMode();
+        document.querySelector(".admin-form").scrollIntoView({ behavior: "smooth", block: "start" });
+
+    } catch (e) {
+        alert("Rezept konnte nicht geladen werden: " + e.message);
+    }
+}
+
+function enterFormEditMode() {
+    document.getElementById("submit-btn").textContent = "Änderungen speichern";
+    const cancel = document.getElementById("cancel-edit-btn");
+    if (cancel) cancel.style.display = "inline-block";
+    const ft = document.getElementById("form-title");
+    if (ft) ft.textContent = "Rezept bearbeiten";
+}
+
+function exitFormEditMode() {
+    editingId = null;
+    document.getElementById("recipe-form").reset();
+    document.getElementById("image-upload-area").classList.remove("has-image");
+    document.getElementById("ingredients-list").innerHTML = "";
+    document.getElementById("steps-list").innerHTML       = "";
+    addIngredientRow();
+    addInstructionStep();
+
+    document.getElementById("submit-btn").textContent = "Rezept speichern";
+    const cancel = document.getElementById("cancel-edit-btn");
+    if (cancel) cancel.style.display = "none";
+    const ft = document.getElementById("form-title");
+    if (ft) ft.textContent = "Neues Rezept erfassen";
+}
+
+// ── Zutat hinzufügen (optional vorbefüllt) ───────────────────
+function addIngredientRow(amount = "", name = "") {
     const list = document.getElementById("ingredients-list");
     const row  = document.createElement("div");
     row.className = "ingredient-row";
     row.innerHTML = `
-        <input type="text" placeholder="Menge (z.B. 200g)" class="ing-amount">
-        <input type="text" placeholder="Zutat (z.B. Spaghetti)"  class="ing-name">
+        <input type="text" placeholder="Menge (z.B. 200g)" class="ing-amount" value="${escapeAttr(amount)}">
+        <input type="text" placeholder="Zutat (z.B. Spaghetti)"  class="ing-name" value="${escapeAttr(name)}">
         <button type="button" class="remove-btn" onclick="removeRow(this)" title="Entfernen">×</button>
     `;
     list.appendChild(row);
-    row.querySelector(".ing-amount").focus();
+    if (!amount && !name) row.querySelector(".ing-amount").focus();
 }
 
-// ── Schritt hinzufügen ───────────────────────────────────────
-function addInstructionStep() {
+// ── Schritt hinzufügen (optional vorbefüllt) ─────────────────
+function addInstructionStep(text = "") {
     const list  = document.getElementById("steps-list");
     const index = list.children.length + 1;
     const item  = document.createElement("li");
     item.className = "step-form-item";
     item.innerHTML = `
         <span class="step-form-number">${index}</span>
-        <textarea placeholder="Schritt ${index} beschreiben…" rows="2"></textarea>
+        <textarea placeholder="Schritt ${index} beschreiben…" rows="2">${escapeHtml(text)}</textarea>
         <button type="button" class="remove-btn" onclick="removeRow(this)" title="Entfernen">×</button>
     `;
     list.appendChild(item);
-    item.querySelector("textarea").focus();
+    if (!text) item.querySelector("textarea").focus();
     updateStepNumbers();
 }
 
@@ -991,25 +1063,30 @@ async function submitRecipe(event) {
         .map(ta => ta.value.trim())
         .filter(s => s);
 
+    const isEdit = editingId !== null;
+
     try {
-        // 1. Rezept anlegen
-        const res = await fetch(`${API_BASE}/recipes/`, {
-            method:  "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-Admin-Token": getAdminToken(),
-            },
-            body:    JSON.stringify({ title, category, description, servings, prep_time, cook_time, ingredients, instructions }),
-        });
+        // 1. Rezept anlegen (POST) oder aktualisieren (PUT)
+        const res = await fetch(
+            isEdit ? `${API_BASE}/recipes/${editingId}` : `${API_BASE}/recipes/`,
+            {
+                method:  isEdit ? "PUT" : "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Admin-Token": getAdminToken(),
+                },
+                body:    JSON.stringify({ title, category, description, servings, prep_time, cook_time, ingredients, instructions }),
+            }
+        );
 
         if (!res.ok) {
-            const err = await res.json();
+            const err = await res.json().catch(() => ({}));
             throw new Error(err.detail || "Fehler beim Speichern");
         }
 
         const recipe = await res.json();
 
-        // 2. Bild hochladen (falls vorhanden)
+        // 2. Bild hochladen (nur falls ein neues ausgewählt wurde)
         const imageFile = document.getElementById("f-image").files[0];
         if (imageFile) {
             const form = new FormData();
@@ -1022,20 +1099,21 @@ async function submitRecipe(event) {
         }
 
         // Erfolg anzeigen
-        showToast(`Rezept „${recipe.title}" wurde gespeichert! <a href="recipe.html?id=${recipe.id}">Jetzt ansehen →</a>`, "success");
-        document.getElementById("recipe-form").reset();
-        document.getElementById("image-upload-area").classList.remove("has-image");
-        document.getElementById("ingredients-list").innerHTML = "";
-        document.getElementById("steps-list").innerHTML       = "";
-        addIngredientRow();
-        addInstructionStep();
+        showToast(
+            isEdit
+                ? `Rezept „${recipe.title}" wurde aktualisiert! <a href="recipe.html?id=${recipe.id}">Ansehen</a>`
+                : `Rezept „${recipe.title}" wurde gespeichert! <a href="recipe.html?id=${recipe.id}">Jetzt ansehen</a>`,
+            "success"
+        );
+
+        exitFormEditMode();      // Formular zurücksetzen & Edit-Modus verlassen
         loadAdminRecipeList();   // Verwaltungsliste aktualisieren
 
     } catch (err) {
         showToast(`${err.message}`, "error");
     } finally {
         btn.disabled    = false;
-        btn.textContent = "Rezept speichern";
+        btn.textContent = editingId !== null ? "Änderungen speichern" : "Rezept speichern";
     }
 }
 

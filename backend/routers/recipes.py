@@ -11,6 +11,7 @@ from ..database import get_db
 from ..models import Recipe
 from ..schemas import RecipeCreate, RecipeUpdate, RecipeResponse
 from ..storage import UPLOAD_DIR
+from ..auth import require_admin
 
 router = APIRouter(prefix="/recipes", tags=["Rezepte"])
 
@@ -73,7 +74,7 @@ def get_recipe(recipe_id: int, db: Session = Depends(get_db)):
 
 # ── POST /recipes ─────────────────────────────────────────────────────────────
 @router.post("/", response_model=RecipeResponse, status_code=status.HTTP_201_CREATED, summary="Rezept erstellen")
-def create_recipe(data: RecipeCreate, db: Session = Depends(get_db)):
+def create_recipe(data: RecipeCreate, db: Session = Depends(get_db), _: bool = Depends(require_admin)):
     recipe = Recipe(
         title=data.title,
         description=data.description,
@@ -92,7 +93,7 @@ def create_recipe(data: RecipeCreate, db: Session = Depends(get_db)):
 
 # ── PUT /recipes/{id} ────────────────────────────────────────────────────────
 @router.put("/{recipe_id}", response_model=RecipeResponse, summary="Rezept aktualisieren")
-def update_recipe(recipe_id: int, data: RecipeUpdate, db: Session = Depends(get_db)):
+def update_recipe(recipe_id: int, data: RecipeUpdate, db: Session = Depends(get_db), _: bool = Depends(require_admin)):
     recipe = db.query(Recipe).filter(Recipe.id == recipe_id).first()
     if not recipe:
         raise HTTPException(status_code=404, detail="Rezept nicht gefunden")
@@ -111,7 +112,7 @@ def update_recipe(recipe_id: int, data: RecipeUpdate, db: Session = Depends(get_
 
 # ── DELETE /recipes/{id} ──────────────────────────────────────────────────────
 @router.delete("/{recipe_id}", status_code=status.HTTP_204_NO_CONTENT, summary="Rezept löschen")
-def delete_recipe(recipe_id: int, db: Session = Depends(get_db)):
+def delete_recipe(recipe_id: int, db: Session = Depends(get_db), _: bool = Depends(require_admin)):
     recipe = db.query(Recipe).filter(Recipe.id == recipe_id).first()
     if not recipe:
         raise HTTPException(status_code=404, detail="Rezept nicht gefunden")
@@ -132,6 +133,7 @@ async def upload_image(
     recipe_id: int,
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
+    _: bool = Depends(require_admin),
 ):
     recipe = db.query(Recipe).filter(Recipe.id == recipe_id).first()
     if not recipe:

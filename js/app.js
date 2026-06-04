@@ -666,7 +666,10 @@ async function saveRecipeEdit() {
     try {
         const res = await fetch(`${API_BASE}/recipes/${currentRecipe.id}`, {
             method:  "PUT",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                "X-Admin-Token": getAdminToken(),
+            },
             body:    JSON.stringify(payload),
         });
         if (!res.ok) {
@@ -755,23 +758,37 @@ document.addEventListener("DOMContentLoaded", () => {
 //  ADMIN – Login
 // ════════════════════════════════════════════════════════════
 
-const ADMIN_PASSWORD = "FoodAtelier2026";   // ← Passwort hier ändern
-const SESSION_KEY    = "fa_admin_auth";
+// Passwort wird NICHT mehr im Frontend gespeichert – die Prüfung läuft im Backend.
+const TOKEN_KEY = "fa_admin_token";
+
+// Token aus dem Speicher holen (für geschützte Anfragen)
+function getAdminToken() {
+    return localStorage.getItem(TOKEN_KEY) || "";
+}
 
 // Ist der aktuelle Besucher als Admin angemeldet?
 function isAdmin() {
-    return localStorage.getItem(SESSION_KEY) === "1";
+    return !!getAdminToken();
 }
 
-function checkAdminPassword(event) {
+async function checkAdminPassword(event) {
     event.preventDefault();
     const input = document.getElementById("admin-password-input").value;
     const error = document.getElementById("admin-login-error");
+    error.textContent = "";
 
-    if (input === ADMIN_PASSWORD) {
-        localStorage.setItem(SESSION_KEY, "1");
+    try {
+        const res = await fetch(`${API_BASE}/admin/login`, {
+            method:  "POST",
+            headers: { "Content-Type": "application/json" },
+            body:    JSON.stringify({ password: input }),
+        });
+        if (!res.ok) throw new Error("Falsches Passwort");
+
+        const data = await res.json();
+        localStorage.setItem(TOKEN_KEY, data.token);
         showAdminContent();
-    } else {
+    } catch {
         error.textContent = "❌ Falsches Passwort";
         document.getElementById("admin-password-input").value = "";
         document.getElementById("admin-password-input").focus();
@@ -911,7 +928,10 @@ async function submitRecipe(event) {
         // 1. Rezept anlegen
         const res = await fetch(`${API_BASE}/recipes/`, {
             method:  "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                "X-Admin-Token": getAdminToken(),
+            },
             body:    JSON.stringify({ title, category, description, servings, prep_time, cook_time, ingredients, instructions }),
         });
 
@@ -927,7 +947,11 @@ async function submitRecipe(event) {
         if (imageFile) {
             const form = new FormData();
             form.append("file", imageFile);
-            await fetch(`${API_BASE}/recipes/${recipe.id}/image`, { method: "POST", body: form });
+            await fetch(`${API_BASE}/recipes/${recipe.id}/image`, {
+                method:  "POST",
+                headers: { "X-Admin-Token": getAdminToken() },
+                body:    form,
+            });
         }
 
         // Erfolg anzeigen

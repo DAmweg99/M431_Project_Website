@@ -1,8 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from sqlalchemy import text
+from pydantic import BaseModel
 from pathlib import Path
 import os
 
@@ -10,6 +11,7 @@ from .database import engine, DATABASE_URL
 from . import models
 from .routers import recipes
 from .storage import UPLOAD_DIR
+from .auth import verify_password, ADMIN_TOKEN
 
 # Pfade relativ zu backend/main.py
 ROOT = Path(__file__).parent.parent
@@ -49,6 +51,18 @@ async def revalidate_static_assets(request, call_next):
 
 # ── API Routes ─────────────────────────────────────────────────────────────────
 app.include_router(recipes.router, prefix="/api")
+
+
+# ── Admin-Login ────────────────────────────────────────────────────────────────
+class LoginData(BaseModel):
+    password: str
+
+@app.post("/api/admin/login", tags=["Admin"])
+def admin_login(data: LoginData):
+    """Prüft das Passwort server-seitig und gibt bei Erfolg einen Token zurück."""
+    if not verify_password(data.password):
+        raise HTTPException(status_code=401, detail="Falsches Passwort")
+    return {"token": ADMIN_TOKEN}
 
 
 # ── Diagnose-Endpunkt: zeigt DB-Status (Passwort wird maskiert) ────────────────

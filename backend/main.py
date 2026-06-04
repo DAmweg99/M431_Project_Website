@@ -36,6 +36,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+# ── Cache-Control für JS/CSS ───────────────────────────────────────────────────
+# "no-cache" = Browser muss vor Nutzung beim Server nachfragen (ETag-Abgleich).
+# Verhindert, dass nach einem Deploy eine alte JS/CSS-Version angezeigt wird.
+@app.middleware("http")
+async def revalidate_static_assets(request, call_next):
+    response = await call_next(request)
+    if request.url.path.startswith(("/js/", "/css/")):
+        response.headers["Cache-Control"] = "no-cache"
+    return response
+
 # ── API Routes ─────────────────────────────────────────────────────────────────
 app.include_router(recipes.router, prefix="/api")
 

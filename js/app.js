@@ -313,8 +313,78 @@ async function searchRecipes(query) {
 
 
 // ════════════════════════════════════════════════════════════
-//  RECIPE.HTML – Detailansicht
+//  RECIPE.HTML – Detailansicht & Portionen-Rechner
 // ════════════════════════════════════════════════════════════
+
+// Status für den Portionen-Rechner
+let baseServings    = 1;   // Original-Portionen aus dem Rezept
+let currentServings = 1;   // Aktuell gewählte Portionen
+let baseIngredients = [];  // Original-Zutaten (Basis für die Skalierung)
+
+// Skaliert eine Mengenangabe (Freitext) um den Faktor.
+// Zahlen am Anfang werden multipliziert, reiner Text bleibt unverändert.
+function scaleAmount(amount, factor) {
+    if (!amount) return amount;
+    const str = String(amount).trim();
+
+    // Bereich, z.B. "2-3 EL"
+    let m = str.match(/^(\d+(?:[.,]\d+)?)\s*[-–]\s*(\d+(?:[.,]\d+)?)\s*(.*)$/);
+    if (m) {
+        const a = parseFloat(m[1].replace(",", ".")) * factor;
+        const b = parseFloat(m[2].replace(",", ".")) * factor;
+        return `${formatNumber(a)}-${formatNumber(b)}${m[3] ? " " + m[3] : ""}`;
+    }
+
+    // Bruch, z.B. "1/2 TL"
+    m = str.match(/^(\d+)\s*\/\s*(\d+)\s*(.*)$/);
+    if (m) {
+        const val = (parseInt(m[1]) / parseInt(m[2])) * factor;
+        return `${formatNumber(val)}${m[3] ? " " + m[3] : ""}`;
+    }
+
+    // Ganzzahl / Dezimal, z.B. "500 g", "1,5 EL", "2"
+    m = str.match(/^(\d+(?:[.,]\d+)?)\s*(.*)$/);
+    if (m) {
+        const val = parseFloat(m[1].replace(",", ".")) * factor;
+        return `${formatNumber(val)}${m[2] ? " " + m[2] : ""}`;
+    }
+
+    // Keine Zahl (z.B. "Prise", "etwas", "nach Geschmack") → unverändert
+    return str;
+}
+
+// Zahl schön formatieren (max. 2 Nachkommastellen, deutsches Komma)
+function formatNumber(n) {
+    const rounded = Math.round(n * 100) / 100;
+    if (Number.isInteger(rounded)) return String(rounded);
+    return rounded.toFixed(2).replace(/0+$/, "").replace(/\.$/, "").replace(".", ",");
+}
+
+// Zutaten-HTML für einen bestimmten Skalierungsfaktor bauen
+function buildIngredientsHtml(factor) {
+    return baseIngredients
+        .map(i => `<li><span class="ingredient-amount">${scaleAmount(i.amount, factor)}</span> ${i.name}</li>`)
+        .join("");
+}
+
+// Portionen per Stepper ändern (− / +)
+function changePortions(delta) {
+    const next = currentServings + delta;
+    if (next < 1 || next > 50) return;
+    currentServings = next;
+
+    const factor = currentServings / baseServings;
+
+    const list = document.getElementById("ingredients-list");
+    if (list) list.innerHTML = buildIngredientsHtml(factor);
+
+    const count = document.getElementById("portion-count");
+    if (count) count.textContent = currentServings;
+
+    const meta = document.getElementById("meta-servings");
+    if (meta) meta.textContent = currentServings;
+}
+
 
 async function loadRecipeDetail() {
     const container = document.getElementById("recipe-detail");
@@ -337,10 +407,14 @@ async function loadRecipeDetail() {
         // Seitentitel anpassen
         document.title = `${r.title} – Food Atelier`;
 
-        // Zutaten als HTML-Liste
-        const ingredientsHtml = (r.ingredients || [])
-            .map(i => `<li><span class="ingredient-amount">${i.amount}</span> ${i.name}</li>`)
-            .join("");
+        // Portionen-Rechner initialisieren
+        baseServings    = (r.servings && r.servings > 0) ? r.servings : 1;
+        currentServings = baseServings;
+        baseIngredients = r.ingredients || [];
+        const hasServings = !!(r.servings && r.servings > 0);
+
+        // Zutaten als HTML-Liste (Faktor 1 = Original)
+        const ingredientsHtml = buildIngredientsHtml(1);
 
         // Schritte als nummerierte Liste
         const stepsHtml = (r.instructions || [])
@@ -386,15 +460,24 @@ async function loadRecipeDetail() {
                             <div class="meta-item">
                                 <span class="meta-icon">👥</span>
                                 <span class="meta-label">Portionen</span>
-                                <strong>${r.servings}</strong>
+                                <strong id="meta-servings">${r.servings}</strong>
                             </div>` : ""}
                         </div>
                     </header>
 
                     <div class="detail-body">
                         <aside class="ingredients-box">
-                            <h2>Zutaten</h2>
-                            <ul class="ingredients-list">
+                            <div class="ingredients-header">
+                                <h2>Zutaten</h2>
+                                ${hasServings ? `
+                                <div class="portion-stepper">
+                                    <button type="button" class="portion-btn" onclick="changePortions(-1)" aria-label="Weniger Portionen">−</button>
+                                    <span class="portion-display"><strong id="portion-count">${currentServings}</strong>&nbsp;Port.</span>
+                                    <button type="button" class="portion-btn" onclick="changePortions(1)" aria-label="Mehr Portionen">+</button>
+                                </div>` : ""}
+                            </div>
+                            ${hasServings ? `<p class="portion-hint">Mengen passen sich automatisch an</p>` : ""}
+                            <ul class="ingredients-list" id="ingredients-list">
                                 ${ingredientsHtml || "<li>Keine Angabe</li>"}
                             </ul>
                         </aside>

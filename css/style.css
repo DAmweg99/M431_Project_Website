@@ -26,8 +26,8 @@ header {
     margin-bottom: 15px;
 }
 .logo-mascot {
-    width: 64px;
-    height: 64px;
+    width: 90px;
+    height: 90px;
     object-fit: contain;
     transition: transform 0.3s;
 }
@@ -121,26 +121,6 @@ h3 {
     outline: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-/* Maskottchen in der Hero-Sektion */
-.hero-mascot {
-    position: absolute;
-    right: 24px;
-    bottom: -10px;
-    width: 130px;
-    height: auto;
-    pointer-events: none;
-    filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.15));
-    animation: mascotBob 3s ease-in-out infinite;
-}
-@keyframes mascotBob {
-    0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(-8px); }
-}
-
-/* Auf schmalen Bildschirmen ausblenden, damit nichts überlappt */
-@media (max-width: 600px) {
-    .hero-mascot { display: none; }
-}
 /* ════════════════════════════════════════════════════════════
    MENÜART – Kategorie-Karten (Fooby-Style)
 ════════════════════════════════════════════════════════════ */

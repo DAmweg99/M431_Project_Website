@@ -1,8 +1,8 @@
 // ════════════════════════════════════════════════════════════
-//  Food Atelier – Frontend API Integration
+//  Food Atelier, Frontend API Integration
 // ════════════════════════════════════════════════════════════
 
-// Relative URL – funktioniert lokal (localhost:8000) und in der Cloud
+// Relative URL, funktioniert lokal (localhost:8000) und in der Cloud
 const API_BASE = "/api";
 const IMG_BASE = "/uploads";
 
@@ -101,7 +101,7 @@ function createRecipeCard(recipe) {
 
 
 // ════════════════════════════════════════════════════════════
-//  INDEX – Featured Recipe
+//  INDEX, Featured Recipe
 // ════════════════════════════════════════════════════════════
 
 async function loadFeaturedRecipe() {
@@ -142,7 +142,7 @@ async function loadFeaturedRecipe() {
             </div>
         `;
     } catch {
-        // Falls API nicht läuft – statischer Fallback
+        // Falls API nicht läuft, statischer Fallback
         section.innerHTML = `
             <div class="recipe-image">
                 <img src="images/WhatsApp Image 2026-05-11 at 15.05.21.jpeg" alt="Lachsfilet">
@@ -160,7 +160,7 @@ async function loadFeaturedRecipe() {
 
 
 // ════════════════════════════════════════════════════════════
-//  MENÜART – Kategorie-Karten Klick-Handler
+//  MENÜART, Kategorie-Karten Klick-Handler
 // ════════════════════════════════════════════════════════════
 
 // Aktuell aktive Kategorie merken
@@ -205,7 +205,7 @@ function scrollToRecipes() {
 
 
 // ════════════════════════════════════════════════════════════
-//  INDEX – Rezept-Grid & Kategorie-Filter
+//  INDEX, Rezept-Grid & Kategorie-Filter
 // ════════════════════════════════════════════════════════════
 
 async function loadRecipes(category = "") {
@@ -235,7 +235,7 @@ async function loadRecipes(category = "") {
             return;
         }
 
-        // 3. Einblenden – Karten animieren einzeln rein, Höhe wieder freigeben
+        // 3. Einblenden, Karten animieren einzeln rein, Höhe wieder freigeben
         grid.style.minHeight = "";
         grid.innerHTML = recipes.map(createRecipeCard).join("");
 
@@ -253,7 +253,7 @@ async function loadRecipes(category = "") {
 
 
 // ════════════════════════════════════════════════════════════
-//  INDEX – Live-Suche mit Dropdown
+//  INDEX, Live-Suche mit Dropdown
 // ════════════════════════════════════════════════════════════
 
 // Suchbegriff im Titel farbig hervorheben
@@ -330,7 +330,7 @@ async function showSearchDropdown(query) {
     }
 }
 
-// Für kategorien.html – Grid-Suche (unverändert)
+// Für kategorien.html, Grid-Suche (unverändert)
 async function searchRecipes(query) {
     const grid     = document.getElementById("recipe-grid");
     const noResult = document.getElementById("no-results");
@@ -352,7 +352,7 @@ async function searchRecipes(query) {
 
 
 // ════════════════════════════════════════════════════════════
-//  RECIPE.HTML – Detailansicht & Portionen-Rechner
+//  RECIPE.HTML, Detailansicht & Portionen-Rechner
 // ════════════════════════════════════════════════════════════
 
 // Status für den Portionen-Rechner
@@ -442,11 +442,11 @@ async function loadRecipeDetail() {
         const r      = await apiFetch(`/recipes/${recipeId}`);
         currentRecipe = r;   // für den Edit-Modus merken
         const imgUrl = getImageUrl(r.image_path);
-        const prepT  = r.prep_time ? `${r.prep_time} Min.` : "–";
-        const cookT  = r.cook_time ? `${r.cook_time} Min.` : "–";
+        const prepT  = r.prep_time ? `${r.prep_time} Min.` : "k. A.";
+        const cookT  = r.cook_time ? `${r.cook_time} Min.` : "k. A.";
 
         // Seitentitel anpassen
-        document.title = `${r.title} – Food Atelier`;
+        document.title = `${r.title} | Food Atelier`;
 
         // Portionen-Rechner initialisieren
         baseServings    = (r.servings && r.servings > 0) ? r.servings : 1;
@@ -549,7 +549,7 @@ async function loadRecipeDetail() {
 
 
 // ════════════════════════════════════════════════════════════
-//  RECIPE.HTML – Inline-Editiermodus (nur Admin)
+//  RECIPE.HTML, Inline-Editiermodus (nur Admin)
 // ════════════════════════════════════════════════════════════
 
 function startEditMode() {
@@ -717,7 +717,7 @@ async function saveRecipeEdit() {
 
 
 // ════════════════════════════════════════════════════════════
-//  INIT – je nach Seite die richtige Funktion starten
+//  INIT, je nach Seite die richtige Funktion starten
 // ════════════════════════════════════════════════════════════
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -791,7 +791,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 // ════════════════════════════════════════════════════════════
-//  KOCHSCHULE – Saisonkalender & Live-Tracker
+//  KOCHSCHULE, Saisonkalender & Live-Tracker
 // ════════════════════════════════════════════════════════════
 
 const MONTHS_SHORT = ["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"];
@@ -814,7 +814,7 @@ const SEASONAL_DATA = [
     { name: "Rüebli (Karotten)", type: "gemuese", img: "Carrots", months: season([6,7,8,9,10,11], [1,2,3,4,5,12]),
       desc: "Süsslich-knackiges Wurzelgemüse, reich an Beta-Carotin. Roh, gedämpft oder im Eintopf vielseitig einsetzbar." },
     { name: "Kartoffeln", type: "gemuese", img: "Potatoes", months: season([7,8,9,10], [1,2,3,4,5,6,11,12]),
-      desc: "Stärkehaltige Knolle und sättigende Beilage – ob als Pommes, Stock, Gratin oder Salzkartoffeln." },
+      desc: "Stärkehaltige Knolle und sättigende Beilage, ob als Pommes, Stock, Gratin oder Salzkartoffeln." },
     { name: "Zwiebeln", type: "gemuese", img: "Onion", months: season([8,9,10], [1,2,3,4,5,6,7,11,12]),
       desc: "Aromatische Basis für unzählige Gerichte; roh scharf, gekocht mild und süsslich." },
     { name: "Knoblauch", type: "gemuese", img: "Garlic", months: season([7,8,9], [1,2,3,4,5,6,10,11,12]),
@@ -822,17 +822,17 @@ const SEASONAL_DATA = [
     { name: "Lauch", type: "gemuese", img: "Leek", months: season([1,2,3,4,9,10,11,12]),
       desc: "Milder Verwandter der Zwiebel, ideal für Suppen, Quiches und Schmorgerichte." },
     { name: "Frühlingszwiebeln", type: "gemuese", img: "Spring Onions", months: season([4,5,6,7,8,9]),
-      desc: "Zarte junge Zwiebeln mit feinem Aroma – frisch über Salate und Asia-Gerichte." },
+      desc: "Zarte junge Zwiebeln mit feinem Aroma, frisch über Salate und Asia-Gerichte." },
     { name: "Tomaten", type: "gemuese", img: "Tomato", months: season([6,7,8,9,10]),
       desc: "Saftige Sommerfrucht, roh im Salat oder gekocht als Sugo. Voll ausgereift am aromatischsten." },
     { name: "Peperoni", type: "gemuese", img: "Red Pepper", months: season([7,8,9,10]),
-      desc: "Knackige, süssliche Schoten in Rot, Gelb und Grün – roh, gegrillt oder gefüllt." },
+      desc: "Knackige, süssliche Schoten in Rot, Gelb und Grün, roh, gegrillt oder gefüllt." },
     { name: "Gurken", type: "gemuese", img: "Cucumber", months: season([6,7,8,9]),
       desc: "Erfrischend und wasserreich, perfekt für Salate, Sandwiches und kalte Suppen." },
     { name: "Zucchetti", type: "gemuese", img: "Courgettes", months: season([6,7,8,9]),
       desc: "Mildes Kürbisgewächs, schnell gebraten, gegrillt oder gefüllt zubereitet." },
     { name: "Spargel", type: "gemuese", img: "Asparagus", months: season([4,5,6]),
-      desc: "Edles Frühlingsgemüse mit kurzer Saison – grün oder weiss, klassisch mit Sauce hollandaise." },
+      desc: "Edles Frühlingsgemüse mit kurzer Saison, grün oder weiss, klassisch mit Sauce hollandaise." },
     { name: "Erbsen", type: "gemuese", img: "Peas", months: season([6,7,8]),
       desc: "Süsse grüne Hülsenfrüchte, frisch oder tiefgekühlt, als Beilage oder in Risotto." },
     { name: "Bohnen", type: "gemuese", img: "Green Beans", months: season([7,8,9]),
@@ -840,7 +840,7 @@ const SEASONAL_DATA = [
     { name: "Zuckermais", type: "gemuese", img: "Sweetcorn", months: season([8,9,10]),
       desc: "Süsse gelbe Kolben, gekocht, gegrillt oder als Körner im Salat." },
     { name: "Broccoli", type: "gemuese", img: "Broccoli", months: season([6,7,8,9,10]),
-      desc: "Vitaminreiches Kohlgemüse, kurz blanchiert oder gedämpft am besten – bissfest servieren." },
+      desc: "Vitaminreiches Kohlgemüse, kurz blanchiert oder gedämpft am besten, bissfest servieren." },
     { name: "Blumenkohl", type: "gemuese", imgUrl: WM + "/0/08/Bloemkool.jpg/330px-Bloemkool.jpg", months: season([6,7,8,9,10,11]),
       desc: "Mildes Kohlgemüse, gedämpft, gratiniert oder als Low-Carb-Püree und -Reis." },
     { name: "Kohlrabi", type: "gemuese", imgUrl: WM + "/6/6f/Koolrabi_%28Brassica_oleracea_convar._acephala_alef._var._gongylodes%29.jpg/330px-Koolrabi_%28Brassica_oleracea_convar._acephala_alef._var._gongylodes%29.jpg", months: season([5,6,7,8,9,10]),
@@ -854,11 +854,11 @@ const SEASONAL_DATA = [
     { name: "Kopfsalat", type: "gemuese", img: "Lettuce", months: season([4,5,6,7,8,9,10]),
       desc: "Klassischer Blattsalat, Basis für frische Salate. Schonend waschen und trocknen." },
     { name: "Nüsslisalat", type: "gemuese", imgUrl: WM + "/7/7c/Valerianella_echinata_1.jpg/330px-Valerianella_echinata_1.jpg", months: season([1,2,3,9,10,11,12]),
-      desc: "Feiner, nussiger Wintersalat (Feldsalat), reich an Vitaminen – ideal in der kalten Jahreszeit." },
+      desc: "Feiner, nussiger Wintersalat (Feldsalat), reich an Vitaminen, ideal in der kalten Jahreszeit." },
     { name: "Radieschen", type: "gemuese", img: "Radish", months: season([4,5,6,7,8,9,10]),
       desc: "Scharf-knackige Knollen, roh als Snack, im Salat oder auf dem Butterbrot." },
     { name: "Randen (Rote Bete)", type: "gemuese", img: "Beetroot", months: season([6,7,8,9,10], [11,12,1,2,3]),
-      desc: "Erdig-süsse rote Knolle, gekocht oder roh geraffelt – färbt stark ab." },
+      desc: "Erdig-süsse rote Knolle, gekocht oder roh geraffelt, färbt stark ab." },
     { name: "Knollensellerie", type: "gemuese", img: "Celery", months: season([8,9,10,11], [12,1,2,3]),
       desc: "Würzige Knolle für Suppen, Püree und Eintöpfe; auch roh als Remoulade." },
     { name: "Fenchel", type: "gemuese", img: "Fennel", months: season([6,7,8,9,10]),
@@ -872,7 +872,7 @@ const SEASONAL_DATA = [
     { name: "Rosenkohl", type: "gemuese", img: "Brussels Sprouts", months: season([1,2,9,10,11,12]),
       desc: "Kleine Kohlröschen mit kräftigem Geschmack, geröstet besonders fein. Wintergemüse." },
     { name: "Champignons", type: "gemuese", img: "Mushrooms", months: season([1,2,3,4,5,6,7,8,9,10,11,12]),
-      desc: "Vielseitige Speisepilze, das ganze Jahr verfügbar – gebraten, gefüllt oder roh im Salat." },
+      desc: "Vielseitige Speisepilze, das ganze Jahr verfügbar, gebraten, gefüllt oder roh im Salat." },
 
     // ── Obst (Schweizer Saison) ─────────────────────────────
     { name: "Äpfel", type: "obst", img: "Apple", months: season([8,9,10,11], [12,1,2,3,4]),
@@ -880,17 +880,17 @@ const SEASONAL_DATA = [
     { name: "Birnen", type: "obst", img: "Pears", months: season([8,9,10], [11,12,1]),
       desc: "Saftig-süsse Frucht, frisch, im Kuchen oder gedünstet zu Käse." },
     { name: "Erdbeeren", type: "obst", img: "Strawberries", months: season([5,6,7]),
-      desc: "Süsse Sommerbeeren – am besten frisch geniessen, da empfindlich und kurz haltbar." },
+      desc: "Süsse Sommerbeeren, am besten frisch geniessen, da empfindlich und kurz haltbar." },
     { name: "Kirschen", type: "obst", img: "Cherry", months: season([6,7]),
       desc: "Knackige Steinfrüchte, süss oder sauer; frisch, im Kuchen oder als Konfitüre." },
     { name: "Aprikosen", type: "obst", img: "Apricot", months: season([7,8]),
-      desc: "Aromatische Steinfrüchte mit kurzer Saison – frisch, im Kuchen oder als Konfitüre." },
+      desc: "Aromatische Steinfrüchte mit kurzer Saison, frisch, im Kuchen oder als Konfitüre." },
     { name: "Pfirsiche", type: "obst", img: "Peaches", months: season([7,8,9]),
       desc: "Saftig-süsse Sommerfrucht, frisch oder im Dessert. Reif besonders aromatisch." },
     { name: "Zwetschgen", type: "obst", imgUrl: WM + "/7/73/Zwetschge.JPG/330px-Zwetschge.JPG", months: season([8,9,10]),
       desc: "Blaue Steinfrüchte, ideal für Wähen, Kuchen und Konfitüre." },
     { name: "Himbeeren", type: "obst", img: "Raspberries", months: season([6,7,8,9]),
-      desc: "Zarte, aromatische Beeren – frisch, im Dessert oder als Sauce." },
+      desc: "Zarte, aromatische Beeren, frisch, im Dessert oder als Sauce." },
     { name: "Heidelbeeren", type: "obst", img: "Blueberries", months: season([7,8,9]),
       desc: "Kleine blaue Beeren, reich an Antioxidantien; frisch, im Müesli oder Gebäck." },
     { name: "Brombeeren", type: "obst", img: "Blackberries", months: season([7,8,9]),
@@ -902,13 +902,13 @@ const SEASONAL_DATA = [
     { name: "Trauben", type: "obst", imgUrl: WM + "/c/c6/Weintraube_01_KMJ.jpg/330px-Weintraube_01_KMJ.jpg", months: season([9,10]),
       desc: "Süsse Beeren am Rebstock, frisch als Snack oder zu Käse." },
     { name: "Quitten", type: "obst", imgUrl: WM + "/0/04/Quitte_am_Baum.jpg/330px-Quitte_am_Baum.jpg", months: season([9,10,11]),
-      desc: "Harte, sehr aromatische Frucht – roh ungeniessbar, gekocht als Gelee oder Mus." },
+      desc: "Harte, sehr aromatische Frucht, roh ungeniessbar, gekocht als Gelee oder Mus." },
     { name: "Rhabarber", type: "obst", img: "Rhubarb", months: season([4,5,6]),
       desc: "Säuerliche Stangen (botanisch ein Gemüse), für Wähen, Kompott und Kuchen. Nur gekocht geniessen." },
     { name: "Baumnüsse", type: "obst", img: "Walnuts", months: season([9,10], [11,12,1,2,3]),
       desc: "Heimische Walnüsse, reich an gesunden Fetten; in Gebäck, Salat oder pur." },
     { name: "Kastanien (Marroni)", type: "obst", img: "Chestnuts", months: season([9,10,11]),
-      desc: "Marroni – stärkehaltige Herbstfrüchte, geröstet, als Vermicelles oder Beilage." },
+      desc: "Marroni, stärkehaltige Herbstfrüchte, geröstet, als Vermicelles oder Beilage." },
 ];
 
 // Kleines Produktbild (TheMealDB-CDN oder direkte URL), mit Fallback bei Fehler
@@ -933,7 +933,7 @@ function formatMonthRange(indices) {
     }
     ranges.push([start, prev]);
     return ranges
-        .map(([a, b]) => a === b ? MONTHS_SHORT[a] : `${MONTHS_SHORT[a]}–${MONTHS_SHORT[b]}`)
+        .map(([a, b]) => a === b ? MONTHS_SHORT[a] : `${MONTHS_SHORT[a]} bis ${MONTHS_SHORT[b]}`)
         .join(", ");
 }
 
@@ -982,7 +982,7 @@ async function openProduceModal(name) {
     document.body.appendChild(overlay);
     document.body.style.overflow = "hidden";
 
-    // Rezepte über die (Synonym-)Suche laden – Klammerzusatz entfernen
+    // Rezepte über die (Synonym-)Suche laden, Klammerzusatz entfernen
     const query = item.name.replace(/\s*\(.*\)\s*/, "").trim();
     const box   = overlay.querySelector("#produce-modal-recipes");
     try {
@@ -1099,10 +1099,10 @@ function renderCalendar(type, monthIdx) {
 
 
 // ════════════════════════════════════════════════════════════
-//  ADMIN – Login
+//  ADMIN, Login
 // ════════════════════════════════════════════════════════════
 
-// Passwort wird NICHT mehr im Frontend gespeichert – die Prüfung läuft im Backend.
+// Passwort wird NICHT mehr im Frontend gespeichert, die Prüfung läuft im Backend.
 const TOKEN_KEY = "fa_admin_token";
 
 // Token aus dem Speicher holen (für geschützte Anfragen)
@@ -1212,7 +1212,7 @@ function adminLogout() {
 
 
 // ════════════════════════════════════════════════════════════
-//  ADMIN – Rezept erfassen
+//  ADMIN, Rezept erfassen
 // ════════════════════════════════════════════════════════════
 
 function initAdminForm() {

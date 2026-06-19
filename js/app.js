@@ -805,42 +805,67 @@ function season(fresh = [], lager = []) {
     return arr;
 }
 
+// img = Zutaten-Name bei TheMealDB (Bild-CDN). Leer = kein Bild verfügbar.
 const SEASONAL_DATA = [
-    // ── Gemüse ──────────────────────────────────────────────
-    { name: "Rüebli (Karotten)", type: "gemuese", months: season([6,7,8,9,10,11], [1,2,3,4,5,12]) },
-    { name: "Kartoffeln",        type: "gemuese", months: season([7,8,9,10], [1,2,3,4,5,6,11,12]) },
-    { name: "Zwiebeln",          type: "gemuese", months: season([8,9,10], [1,2,3,4,5,6,7,11,12]) },
-    { name: "Lauch",             type: "gemuese", months: season([1,2,3,4,9,10,11,12]) },
-    { name: "Tomaten",           type: "gemuese", months: season([6,7,8,9,10]) },
-    { name: "Peperoni",          type: "gemuese", months: season([7,8,9,10]) },
-    { name: "Zucchetti",         type: "gemuese", months: season([6,7,8,9]) },
-    { name: "Gurken",            type: "gemuese", months: season([6,7,8,9]) },
-    { name: "Spargel",           type: "gemuese", months: season([4,5,6]) },
-    { name: "Broccoli",          type: "gemuese", months: season([6,7,8,9,10]) },
-    { name: "Blumenkohl",        type: "gemuese", months: season([6,7,8,9,10,11]) },
-    { name: "Kürbis",            type: "gemuese", months: season([8,9,10,11], [12,1]) },
-    { name: "Spinat",            type: "gemuese", months: season([3,4,5,6,9,10,11]) },
-    { name: "Kopfsalat",         type: "gemuese", months: season([4,5,6,7,8,9,10]) },
-    { name: "Randen (Rote Bete)",type: "gemuese", months: season([6,7,8,9,10], [11,12,1,2,3]) },
-    { name: "Knollensellerie",   type: "gemuese", months: season([8,9,10,11], [12,1,2,3]) },
-    { name: "Fenchel",           type: "gemuese", months: season([6,7,8,9,10]) },
-    { name: "Rosenkohl",         type: "gemuese", months: season([1,2,9,10,11,12]) },
-    { name: "Champignons",       type: "gemuese", months: season([1,2,3,4,5,6,7,8,9,10,11,12]) },
+    // ── Gemüse (Schweizer Saison) ───────────────────────────
+    { name: "Rüebli (Karotten)",  type: "gemuese", img: "Carrots",          months: season([6,7,8,9,10,11], [1,2,3,4,5,12]) },
+    { name: "Kartoffeln",         type: "gemuese", img: "Potatoes",         months: season([7,8,9,10], [1,2,3,4,5,6,11,12]) },
+    { name: "Zwiebeln",           type: "gemuese", img: "Onion",            months: season([8,9,10], [1,2,3,4,5,6,7,11,12]) },
+    { name: "Knoblauch",          type: "gemuese", img: "Garlic",           months: season([7,8,9], [1,2,3,4,5,6,10,11,12]) },
+    { name: "Lauch",              type: "gemuese", img: "Leek",             months: season([1,2,3,4,9,10,11,12]) },
+    { name: "Frühlingszwiebeln",  type: "gemuese", img: "Spring Onions",    months: season([4,5,6,7,8,9]) },
+    { name: "Tomaten",            type: "gemuese", img: "Tomato",           months: season([6,7,8,9,10]) },
+    { name: "Peperoni",           type: "gemuese", img: "Red Pepper",       months: season([7,8,9,10]) },
+    { name: "Gurken",             type: "gemuese", img: "Cucumber",         months: season([6,7,8,9]) },
+    { name: "Zucchetti",          type: "gemuese", img: "Courgettes",       months: season([6,7,8,9]) },
+    { name: "Spargel",            type: "gemuese", img: "Asparagus",        months: season([4,5,6]) },
+    { name: "Erbsen",             type: "gemuese", img: "Peas",             months: season([6,7,8]) },
+    { name: "Bohnen",             type: "gemuese", img: "Green Beans",      months: season([7,8,9]) },
+    { name: "Zuckermais",         type: "gemuese", img: "Sweetcorn",        months: season([8,9,10]) },
+    { name: "Broccoli",           type: "gemuese", img: "Broccoli",         months: season([6,7,8,9,10]) },
+    { name: "Blumenkohl",         type: "gemuese", img: "",                 months: season([6,7,8,9,10,11]) },
+    { name: "Kohlrabi",           type: "gemuese", img: "",                 months: season([5,6,7,8,9,10]) },
+    { name: "Kürbis",             type: "gemuese", img: "Pumpkin",          months: season([8,9,10,11], [12,1]) },
+    { name: "Spinat",             type: "gemuese", img: "Spinach",          months: season([3,4,5,6,9,10,11]) },
+    { name: "Mangold",            type: "gemuese", img: "",                 months: season([5,6,7,8,9,10]) },
+    { name: "Kopfsalat",          type: "gemuese", img: "Lettuce",          months: season([4,5,6,7,8,9,10]) },
+    { name: "Nüsslisalat",        type: "gemuese", img: "",                 months: season([1,2,3,9,10,11,12]) },
+    { name: "Radieschen",         type: "gemuese", img: "Radish",           months: season([4,5,6,7,8,9,10]) },
+    { name: "Randen (Rote Bete)", type: "gemuese", img: "Beetroot",         months: season([6,7,8,9,10], [11,12,1,2,3]) },
+    { name: "Knollensellerie",    type: "gemuese", img: "Celery",           months: season([8,9,10,11], [12,1,2,3]) },
+    { name: "Fenchel",            type: "gemuese", img: "Fennel",           months: season([6,7,8,9,10]) },
+    { name: "Weisskohl",          type: "gemuese", img: "Cabbage",          months: season([6,7,8,9,10,11], [12,1,2,3]) },
+    { name: "Wirz (Wirsing)",     type: "gemuese", img: "Cabbage",          months: season([1,2,3,9,10,11,12]) },
+    { name: "Federkohl (Grünkohl)", type: "gemuese", img: "Kale",          months: season([1,2,10,11,12]) },
+    { name: "Rosenkohl",          type: "gemuese", img: "Brussels Sprouts", months: season([1,2,9,10,11,12]) },
+    { name: "Champignons",        type: "gemuese", img: "Mushrooms",        months: season([1,2,3,4,5,6,7,8,9,10,11,12]) },
 
-    // ── Obst ────────────────────────────────────────────────
-    { name: "Äpfel",       type: "obst", months: season([8,9,10,11], [12,1,2,3,4]) },
-    { name: "Birnen",      type: "obst", months: season([8,9,10], [11,12,1]) },
-    { name: "Erdbeeren",   type: "obst", months: season([5,6,7]) },
-    { name: "Kirschen",    type: "obst", months: season([6,7]) },
-    { name: "Himbeeren",   type: "obst", months: season([6,7,8,9]) },
-    { name: "Heidelbeeren",type: "obst", months: season([7,8,9]) },
-    { name: "Aprikosen",   type: "obst", months: season([7,8]) },
-    { name: "Pfirsiche",   type: "obst", months: season([7,8,9]) },
-    { name: "Zwetschgen",  type: "obst", months: season([8,9,10]) },
-    { name: "Trauben",     type: "obst", months: season([9,10]) },
-    { name: "Rhabarber",   type: "obst", months: season([4,5,6]) },
-    { name: "Quitten",     type: "obst", months: season([9,10,11]) },
+    // ── Obst (Schweizer Saison) ─────────────────────────────
+    { name: "Äpfel",              type: "obst", img: "Apple",        months: season([8,9,10,11], [12,1,2,3,4]) },
+    { name: "Birnen",             type: "obst", img: "Pears",        months: season([8,9,10], [11,12,1]) },
+    { name: "Erdbeeren",          type: "obst", img: "Strawberries", months: season([5,6,7]) },
+    { name: "Kirschen",           type: "obst", img: "Cherry",       months: season([6,7]) },
+    { name: "Aprikosen",          type: "obst", img: "Apricot",      months: season([7,8]) },
+    { name: "Pfirsiche",          type: "obst", img: "Peaches",      months: season([7,8,9]) },
+    { name: "Zwetschgen",         type: "obst", img: "",             months: season([8,9,10]) },
+    { name: "Himbeeren",          type: "obst", img: "Raspberries",  months: season([6,7,8,9]) },
+    { name: "Heidelbeeren",       type: "obst", img: "Blueberries",  months: season([7,8,9]) },
+    { name: "Brombeeren",         type: "obst", img: "Blackberries", months: season([7,8,9]) },
+    { name: "Johannisbeeren",     type: "obst", img: "Redcurrant",   months: season([6,7,8]) },
+    { name: "Stachelbeeren",      type: "obst", img: "",             months: season([6,7,8]) },
+    { name: "Trauben",            type: "obst", img: "",             months: season([9,10]) },
+    { name: "Quitten",            type: "obst", img: "",             months: season([9,10,11]) },
+    { name: "Rhabarber",          type: "obst", img: "Rhubarb",      months: season([4,5,6]) },
+    { name: "Baumnüsse",          type: "obst", img: "Walnuts",      months: season([9,10], [11,12,1,2,3]) },
+    { name: "Kastanien (Marroni)",type: "obst", img: "Chestnuts",    months: season([9,10,11]) },
 ];
+
+// Kleines Produktbild von der TheMealDB-Bild-CDN (mit Fallback bei Fehler)
+function produceImg(item, cls) {
+    if (!item.img) return `<span class="${cls} produce-img-empty"></span>`;
+    const url = `https://www.themealdb.com/images/ingredients/${encodeURIComponent(item.img)}-Small.png`;
+    return `<img class="${cls}" src="${url}" alt="" loading="lazy" onerror="this.outerHTML='<span class=\\'${cls} produce-img-empty\\'></span>'">`;
+}
 
 // Jahreszeit aus Monat (0-11) bestimmen
 function getSeason(monthIndex) {
@@ -893,7 +918,7 @@ function renderNowChips(type, monthIdx) {
 
     const fresh = SEASONAL_DATA
         .filter(item => item.type === type && item.months[monthIdx] === 2)
-        .map(item => `<span class="season-chip">${item.name}</span>`);
+        .map(item => `<span class="season-chip">${produceImg(item, "chip-img")}${item.name}</span>`);
 
     box.innerHTML = fresh.length
         ? fresh.join("")
@@ -918,7 +943,7 @@ function renderCalendar(type, monthIdx) {
             const cur = i === monthIdx ? " current-month" : "";
             return `<td class="cell ${cls}${cur}"></td>`;
         }).join("");
-        return `<tr><th class="row-label">${item.name}</th>${cells}</tr>`;
+        return `<tr><th class="row-label"><div class="row-label-inner">${produceImg(item, "row-img")}<span>${item.name}</span></div></th>${cells}</tr>`;
     }).join("");
 
     table.innerHTML = `

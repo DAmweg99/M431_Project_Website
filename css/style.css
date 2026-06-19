@@ -1949,25 +1949,86 @@ nav {
 .cal-tab:hover { background: #e0e0d0; }
 .cal-tab.active { background: #88a63d; color: white; }
 
-.calendar-legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 18px;
-    margin-bottom: 16px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 12px;
-    color: #666;
-}
-.legend-item { display: flex; align-items: center; gap: 6px; }
 .legend-dot {
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     border-radius: 4px;
     display: inline-block;
+    flex-shrink: 0;
 }
 .legend-dot.fresh { background: #88a63d; }
 .legend-dot.lager { background: #f0d9a8; }
-.legend-dot.none  { background: #eeeeea; }
+.legend-dot.none  { background: #eeeeea; border: 1px solid #e0e0da; }
+
+/* Erklärung: frisch vs. Lager vs. keine Saison */
+.season-explain {
+    background: #fafaf6;
+    border: 1px solid #ececdf;
+    border-radius: 14px;
+    padding: 22px 26px;
+    margin-bottom: 22px;
+}
+.season-explain h4 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 14px;
+}
+.explain-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.explain-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    line-height: 1.55;
+    color: #555;
+}
+.explain-list .legend-dot {
+    margin-top: 3px;
+}
+.explain-list strong {
+    color: #111;
+}
+
+/* Produktbilder in Chips und Kalenderzeilen */
+.chip-img, .row-img {
+    object-fit: cover;
+    border-radius: 50%;
+    background: #f0f0e8;
+    flex-shrink: 0;
+}
+.chip-img {
+    width: 22px;
+    height: 22px;
+    margin-right: 6px;
+    vertical-align: middle;
+}
+.season-chip {
+    display: inline-flex;
+    align-items: center;
+}
+.row-img {
+    width: 26px;
+    height: 26px;
+}
+.produce-img-empty {
+    display: inline-block;
+    background: #ececdf;
+}
+.row-label-inner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
 /* Kalender-Tabelle */
 .calendar-wrap {

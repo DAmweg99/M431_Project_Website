@@ -12,6 +12,7 @@ from ..models import Recipe
 from ..schemas import RecipeCreate, RecipeUpdate, RecipeResponse
 from ..storage import UPLOAD_DIR
 from ..auth import require_admin
+from ..synonyms import expand_search_terms
 
 router = APIRouter(prefix="/recipes", tags=["Rezepte"])
 
@@ -39,23 +40,26 @@ def search_recipes(
     db: Session = Depends(get_db),
 ):
     """
-    Durchsucht Rezepte nach:
-    - Titel
-    - Beschreibung
-    - Kategorie
-    - Zutaten (JSON-Text)
+    Durchsucht Rezepte nach Titel, Beschreibung, Kategorie und Zutaten.
+
+    Berücksichtigt Oberbegriffe: Sucht man z.B. "Kartoffeln", werden auch
+    Rezepte mit "Pommes Frites" gefunden (siehe backend/synonyms.py).
     """
-    term = f"%{q.lower()}%"
+    # Suchbegriff um passende Synonyme erweitern
+    terms = expand_search_terms(q)
+
+    # Für jeden Begriff in allen Feldern suchen (ODER-verknüpft)
+    conditions = []
+    for t in terms:
+        like = f"%{t}%"
+        conditions.append(func.lower(Recipe.title).like(like))
+        conditions.append(func.lower(Recipe.description).like(like))
+        conditions.append(func.lower(Recipe.category).like(like))
+        conditions.append(func.lower(cast(Recipe.ingredients, Text)).like(like))
+
     results = (
         db.query(Recipe)
-        .filter(
-            or_(
-                func.lower(Recipe.title).like(term),
-                func.lower(Recipe.description).like(term),
-                func.lower(Recipe.category).like(term),
-                func.lower(cast(Recipe.ingredients, Text)).like(term),
-            )
-        )
+        .filter(or_(*conditions))
         .order_by(Recipe.created_at.desc())
         .limit(50)
         .all()

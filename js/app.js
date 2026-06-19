@@ -805,66 +805,203 @@ function season(fresh = [], lager = []) {
     return arr;
 }
 
-// img = Zutaten-Name bei TheMealDB (Bild-CDN). Leer = kein Bild verfügbar.
+// img    = Zutaten-Name bei TheMealDB (Bild-CDN)
+// imgUrl = direkte Bild-URL (für Produkte, die TheMealDB nicht hat)
+// desc   = kurze Produkt-Beschreibung (im Info-Popup)
+const WM = "https://upload.wikimedia.org/wikipedia/commons/thumb";
 const SEASONAL_DATA = [
     // ── Gemüse (Schweizer Saison) ───────────────────────────
-    { name: "Rüebli (Karotten)",  type: "gemuese", img: "Carrots",          months: season([6,7,8,9,10,11], [1,2,3,4,5,12]) },
-    { name: "Kartoffeln",         type: "gemuese", img: "Potatoes",         months: season([7,8,9,10], [1,2,3,4,5,6,11,12]) },
-    { name: "Zwiebeln",           type: "gemuese", img: "Onion",            months: season([8,9,10], [1,2,3,4,5,6,7,11,12]) },
-    { name: "Knoblauch",          type: "gemuese", img: "Garlic",           months: season([7,8,9], [1,2,3,4,5,6,10,11,12]) },
-    { name: "Lauch",              type: "gemuese", img: "Leek",             months: season([1,2,3,4,9,10,11,12]) },
-    { name: "Frühlingszwiebeln",  type: "gemuese", img: "Spring Onions",    months: season([4,5,6,7,8,9]) },
-    { name: "Tomaten",            type: "gemuese", img: "Tomato",           months: season([6,7,8,9,10]) },
-    { name: "Peperoni",           type: "gemuese", img: "Red Pepper",       months: season([7,8,9,10]) },
-    { name: "Gurken",             type: "gemuese", img: "Cucumber",         months: season([6,7,8,9]) },
-    { name: "Zucchetti",          type: "gemuese", img: "Courgettes",       months: season([6,7,8,9]) },
-    { name: "Spargel",            type: "gemuese", img: "Asparagus",        months: season([4,5,6]) },
-    { name: "Erbsen",             type: "gemuese", img: "Peas",             months: season([6,7,8]) },
-    { name: "Bohnen",             type: "gemuese", img: "Green Beans",      months: season([7,8,9]) },
-    { name: "Zuckermais",         type: "gemuese", img: "Sweetcorn",        months: season([8,9,10]) },
-    { name: "Broccoli",           type: "gemuese", img: "Broccoli",         months: season([6,7,8,9,10]) },
-    { name: "Blumenkohl",         type: "gemuese", img: "",                 months: season([6,7,8,9,10,11]) },
-    { name: "Kohlrabi",           type: "gemuese", img: "",                 months: season([5,6,7,8,9,10]) },
-    { name: "Kürbis",             type: "gemuese", img: "Pumpkin",          months: season([8,9,10,11], [12,1]) },
-    { name: "Spinat",             type: "gemuese", img: "Spinach",          months: season([3,4,5,6,9,10,11]) },
-    { name: "Mangold",            type: "gemuese", img: "",                 months: season([5,6,7,8,9,10]) },
-    { name: "Kopfsalat",          type: "gemuese", img: "Lettuce",          months: season([4,5,6,7,8,9,10]) },
-    { name: "Nüsslisalat",        type: "gemuese", img: "",                 months: season([1,2,3,9,10,11,12]) },
-    { name: "Radieschen",         type: "gemuese", img: "Radish",           months: season([4,5,6,7,8,9,10]) },
-    { name: "Randen (Rote Bete)", type: "gemuese", img: "Beetroot",         months: season([6,7,8,9,10], [11,12,1,2,3]) },
-    { name: "Knollensellerie",    type: "gemuese", img: "Celery",           months: season([8,9,10,11], [12,1,2,3]) },
-    { name: "Fenchel",            type: "gemuese", img: "Fennel",           months: season([6,7,8,9,10]) },
-    { name: "Weisskohl",          type: "gemuese", img: "Cabbage",          months: season([6,7,8,9,10,11], [12,1,2,3]) },
-    { name: "Wirz (Wirsing)",     type: "gemuese", img: "Cabbage",          months: season([1,2,3,9,10,11,12]) },
-    { name: "Federkohl (Grünkohl)", type: "gemuese", img: "Kale",          months: season([1,2,10,11,12]) },
-    { name: "Rosenkohl",          type: "gemuese", img: "Brussels Sprouts", months: season([1,2,9,10,11,12]) },
-    { name: "Champignons",        type: "gemuese", img: "Mushrooms",        months: season([1,2,3,4,5,6,7,8,9,10,11,12]) },
+    { name: "Rüebli (Karotten)", type: "gemuese", img: "Carrots", months: season([6,7,8,9,10,11], [1,2,3,4,5,12]),
+      desc: "Süsslich-knackiges Wurzelgemüse, reich an Beta-Carotin. Roh, gedämpft oder im Eintopf vielseitig einsetzbar." },
+    { name: "Kartoffeln", type: "gemuese", img: "Potatoes", months: season([7,8,9,10], [1,2,3,4,5,6,11,12]),
+      desc: "Stärkehaltige Knolle und sättigende Beilage – ob als Pommes, Stock, Gratin oder Salzkartoffeln." },
+    { name: "Zwiebeln", type: "gemuese", img: "Onion", months: season([8,9,10], [1,2,3,4,5,6,7,11,12]),
+      desc: "Aromatische Basis für unzählige Gerichte; roh scharf, gekocht mild und süsslich." },
+    { name: "Knoblauch", type: "gemuese", img: "Garlic", months: season([7,8,9], [1,2,3,4,5,6,10,11,12]),
+      desc: "Würzige Knolle, die Saucen, Braten und Gemüse intensiv aromatisiert. Sparsam dosieren." },
+    { name: "Lauch", type: "gemuese", img: "Leek", months: season([1,2,3,4,9,10,11,12]),
+      desc: "Milder Verwandter der Zwiebel, ideal für Suppen, Quiches und Schmorgerichte." },
+    { name: "Frühlingszwiebeln", type: "gemuese", img: "Spring Onions", months: season([4,5,6,7,8,9]),
+      desc: "Zarte junge Zwiebeln mit feinem Aroma – frisch über Salate und Asia-Gerichte." },
+    { name: "Tomaten", type: "gemuese", img: "Tomato", months: season([6,7,8,9,10]),
+      desc: "Saftige Sommerfrucht, roh im Salat oder gekocht als Sugo. Voll ausgereift am aromatischsten." },
+    { name: "Peperoni", type: "gemuese", img: "Red Pepper", months: season([7,8,9,10]),
+      desc: "Knackige, süssliche Schoten in Rot, Gelb und Grün – roh, gegrillt oder gefüllt." },
+    { name: "Gurken", type: "gemuese", img: "Cucumber", months: season([6,7,8,9]),
+      desc: "Erfrischend und wasserreich, perfekt für Salate, Sandwiches und kalte Suppen." },
+    { name: "Zucchetti", type: "gemuese", img: "Courgettes", months: season([6,7,8,9]),
+      desc: "Mildes Kürbisgewächs, schnell gebraten, gegrillt oder gefüllt zubereitet." },
+    { name: "Spargel", type: "gemuese", img: "Asparagus", months: season([4,5,6]),
+      desc: "Edles Frühlingsgemüse mit kurzer Saison – grün oder weiss, klassisch mit Sauce hollandaise." },
+    { name: "Erbsen", type: "gemuese", img: "Peas", months: season([6,7,8]),
+      desc: "Süsse grüne Hülsenfrüchte, frisch oder tiefgekühlt, als Beilage oder in Risotto." },
+    { name: "Bohnen", type: "gemuese", img: "Green Beans", months: season([7,8,9]),
+      desc: "Grüne Hülsenfrüchte, gekocht als Beilage oder im Eintopf. Roh nicht geniessbar." },
+    { name: "Zuckermais", type: "gemuese", img: "Sweetcorn", months: season([8,9,10]),
+      desc: "Süsse gelbe Kolben, gekocht, gegrillt oder als Körner im Salat." },
+    { name: "Broccoli", type: "gemuese", img: "Broccoli", months: season([6,7,8,9,10]),
+      desc: "Vitaminreiches Kohlgemüse, kurz blanchiert oder gedämpft am besten – bissfest servieren." },
+    { name: "Blumenkohl", type: "gemuese", imgUrl: WM + "/0/08/Bloemkool.jpg/330px-Bloemkool.jpg", months: season([6,7,8,9,10,11]),
+      desc: "Mildes Kohlgemüse, gedämpft, gratiniert oder als Low-Carb-Püree und -Reis." },
+    { name: "Kohlrabi", type: "gemuese", imgUrl: WM + "/6/6f/Koolrabi_%28Brassica_oleracea_convar._acephala_alef._var._gongylodes%29.jpg/330px-Koolrabi_%28Brassica_oleracea_convar._acephala_alef._var._gongylodes%29.jpg", months: season([5,6,7,8,9,10]),
+      desc: "Knackige Knolle mit nussig-frischem Geschmack, roh als Snack oder gedünstet." },
+    { name: "Kürbis", type: "gemuese", img: "Pumpkin", months: season([8,9,10,11], [12,1]),
+      desc: "Herbstklassiker für Suppen, Ofengemüse und Risotto. Gut lagerfähig." },
+    { name: "Spinat", type: "gemuese", img: "Spinach", months: season([3,4,5,6,9,10,11]),
+      desc: "Zartes Blattgemüse, roh im Salat oder kurz gedünstet als Beilage. Reich an Eisen." },
+    { name: "Mangold", type: "gemuese", imgUrl: WM + "/b/be/Swiss_Chard.jpg/330px-Swiss_Chard.jpg", months: season([5,6,7,8,9,10]),
+      desc: "Blatt- und Stielgemüse mit erdigem Geschmack, ähnlich wie Spinat verwendbar." },
+    { name: "Kopfsalat", type: "gemuese", img: "Lettuce", months: season([4,5,6,7,8,9,10]),
+      desc: "Klassischer Blattsalat, Basis für frische Salate. Schonend waschen und trocknen." },
+    { name: "Nüsslisalat", type: "gemuese", imgUrl: WM + "/7/7c/Valerianella_echinata_1.jpg/330px-Valerianella_echinata_1.jpg", months: season([1,2,3,9,10,11,12]),
+      desc: "Feiner, nussiger Wintersalat (Feldsalat), reich an Vitaminen – ideal in der kalten Jahreszeit." },
+    { name: "Radieschen", type: "gemuese", img: "Radish", months: season([4,5,6,7,8,9,10]),
+      desc: "Scharf-knackige Knollen, roh als Snack, im Salat oder auf dem Butterbrot." },
+    { name: "Randen (Rote Bete)", type: "gemuese", img: "Beetroot", months: season([6,7,8,9,10], [11,12,1,2,3]),
+      desc: "Erdig-süsse rote Knolle, gekocht oder roh geraffelt – färbt stark ab." },
+    { name: "Knollensellerie", type: "gemuese", img: "Celery", months: season([8,9,10,11], [12,1,2,3]),
+      desc: "Würzige Knolle für Suppen, Püree und Eintöpfe; auch roh als Remoulade." },
+    { name: "Fenchel", type: "gemuese", img: "Fennel", months: season([6,7,8,9,10]),
+      desc: "Anisartig-frische Knolle, roh im Salat oder geschmort als Beilage." },
+    { name: "Weisskohl", type: "gemuese", img: "Cabbage", months: season([6,7,8,9,10,11], [12,1,2,3]),
+      desc: "Lagerfähiger Kohl für Krautsalat, Eintöpfe und Sauerkraut." },
+    { name: "Wirz (Wirsing)", type: "gemuese", img: "Cabbage", months: season([1,2,3,9,10,11,12]),
+      desc: "Krauser Wirsing mit mildem Aroma, ideal für Rouladen und Eintöpfe." },
+    { name: "Federkohl (Grünkohl)", type: "gemuese", img: "Kale", months: season([1,2,10,11,12]),
+      desc: "Robuster Grünkohl, Wintergemüse für Eintöpfe, Chips oder Smoothies." },
+    { name: "Rosenkohl", type: "gemuese", img: "Brussels Sprouts", months: season([1,2,9,10,11,12]),
+      desc: "Kleine Kohlröschen mit kräftigem Geschmack, geröstet besonders fein. Wintergemüse." },
+    { name: "Champignons", type: "gemuese", img: "Mushrooms", months: season([1,2,3,4,5,6,7,8,9,10,11,12]),
+      desc: "Vielseitige Speisepilze, das ganze Jahr verfügbar – gebraten, gefüllt oder roh im Salat." },
 
     // ── Obst (Schweizer Saison) ─────────────────────────────
-    { name: "Äpfel",              type: "obst", img: "Apple",        months: season([8,9,10,11], [12,1,2,3,4]) },
-    { name: "Birnen",             type: "obst", img: "Pears",        months: season([8,9,10], [11,12,1]) },
-    { name: "Erdbeeren",          type: "obst", img: "Strawberries", months: season([5,6,7]) },
-    { name: "Kirschen",           type: "obst", img: "Cherry",       months: season([6,7]) },
-    { name: "Aprikosen",          type: "obst", img: "Apricot",      months: season([7,8]) },
-    { name: "Pfirsiche",          type: "obst", img: "Peaches",      months: season([7,8,9]) },
-    { name: "Zwetschgen",         type: "obst", img: "",             months: season([8,9,10]) },
-    { name: "Himbeeren",          type: "obst", img: "Raspberries",  months: season([6,7,8,9]) },
-    { name: "Heidelbeeren",       type: "obst", img: "Blueberries",  months: season([7,8,9]) },
-    { name: "Brombeeren",         type: "obst", img: "Blackberries", months: season([7,8,9]) },
-    { name: "Johannisbeeren",     type: "obst", img: "Redcurrant",   months: season([6,7,8]) },
-    { name: "Stachelbeeren",      type: "obst", img: "",             months: season([6,7,8]) },
-    { name: "Trauben",            type: "obst", img: "",             months: season([9,10]) },
-    { name: "Quitten",            type: "obst", img: "",             months: season([9,10,11]) },
-    { name: "Rhabarber",          type: "obst", img: "Rhubarb",      months: season([4,5,6]) },
-    { name: "Baumnüsse",          type: "obst", img: "Walnuts",      months: season([9,10], [11,12,1,2,3]) },
-    { name: "Kastanien (Marroni)",type: "obst", img: "Chestnuts",    months: season([9,10,11]) },
+    { name: "Äpfel", type: "obst", img: "Apple", months: season([8,9,10,11], [12,1,2,3,4]),
+      desc: "Knackige, lagerfähige Frucht für Rohgenuss, Kuchen und Kompott. Ganzjährig aus Lager." },
+    { name: "Birnen", type: "obst", img: "Pears", months: season([8,9,10], [11,12,1]),
+      desc: "Saftig-süsse Frucht, frisch, im Kuchen oder gedünstet zu Käse." },
+    { name: "Erdbeeren", type: "obst", img: "Strawberries", months: season([5,6,7]),
+      desc: "Süsse Sommerbeeren – am besten frisch geniessen, da empfindlich und kurz haltbar." },
+    { name: "Kirschen", type: "obst", img: "Cherry", months: season([6,7]),
+      desc: "Knackige Steinfrüchte, süss oder sauer; frisch, im Kuchen oder als Konfitüre." },
+    { name: "Aprikosen", type: "obst", img: "Apricot", months: season([7,8]),
+      desc: "Aromatische Steinfrüchte mit kurzer Saison – frisch, im Kuchen oder als Konfitüre." },
+    { name: "Pfirsiche", type: "obst", img: "Peaches", months: season([7,8,9]),
+      desc: "Saftig-süsse Sommerfrucht, frisch oder im Dessert. Reif besonders aromatisch." },
+    { name: "Zwetschgen", type: "obst", imgUrl: WM + "/7/73/Zwetschge.JPG/330px-Zwetschge.JPG", months: season([8,9,10]),
+      desc: "Blaue Steinfrüchte, ideal für Wähen, Kuchen und Konfitüre." },
+    { name: "Himbeeren", type: "obst", img: "Raspberries", months: season([6,7,8,9]),
+      desc: "Zarte, aromatische Beeren – frisch, im Dessert oder als Sauce." },
+    { name: "Heidelbeeren", type: "obst", img: "Blueberries", months: season([7,8,9]),
+      desc: "Kleine blaue Beeren, reich an Antioxidantien; frisch, im Müesli oder Gebäck." },
+    { name: "Brombeeren", type: "obst", img: "Blackberries", months: season([7,8,9]),
+      desc: "Dunkle Spätsommerbeeren mit kräftigem Aroma, frisch oder als Konfitüre." },
+    { name: "Johannisbeeren", type: "obst", img: "Redcurrant", months: season([6,7,8]),
+      desc: "Säuerliche kleine Beeren in Rot oder Schwarz, ideal für Gelee und Desserts." },
+    { name: "Stachelbeeren", type: "obst", imgUrl: WM + "/9/9b/Ribes_grossularia_L..jpg/330px-Ribes_grossularia_L..jpg", months: season([6,7,8]),
+      desc: "Säuerlich-frische Beeren, roh, in Wähen oder als Kompott." },
+    { name: "Trauben", type: "obst", imgUrl: WM + "/c/c6/Weintraube_01_KMJ.jpg/330px-Weintraube_01_KMJ.jpg", months: season([9,10]),
+      desc: "Süsse Beeren am Rebstock, frisch als Snack oder zu Käse." },
+    { name: "Quitten", type: "obst", imgUrl: WM + "/0/04/Quitte_am_Baum.jpg/330px-Quitte_am_Baum.jpg", months: season([9,10,11]),
+      desc: "Harte, sehr aromatische Frucht – roh ungeniessbar, gekocht als Gelee oder Mus." },
+    { name: "Rhabarber", type: "obst", img: "Rhubarb", months: season([4,5,6]),
+      desc: "Säuerliche Stangen (botanisch ein Gemüse), für Wähen, Kompott und Kuchen. Nur gekocht geniessen." },
+    { name: "Baumnüsse", type: "obst", img: "Walnuts", months: season([9,10], [11,12,1,2,3]),
+      desc: "Heimische Walnüsse, reich an gesunden Fetten; in Gebäck, Salat oder pur." },
+    { name: "Kastanien (Marroni)", type: "obst", img: "Chestnuts", months: season([9,10,11]),
+      desc: "Marroni – stärkehaltige Herbstfrüchte, geröstet, als Vermicelles oder Beilage." },
 ];
 
-// Kleines Produktbild von der TheMealDB-Bild-CDN (mit Fallback bei Fehler)
+// Kleines Produktbild (TheMealDB-CDN oder direkte URL), mit Fallback bei Fehler
 function produceImg(item, cls) {
-    if (!item.img) return `<span class="${cls} produce-img-empty"></span>`;
-    const url = `https://www.themealdb.com/images/ingredients/${encodeURIComponent(item.img)}-Small.png`;
+    let url = item.imgUrl;
+    if (!url && item.img) {
+        url = `https://www.themealdb.com/images/ingredients/${encodeURIComponent(item.img)}-Small.png`;
+    }
+    if (!url) return `<span class="${cls} produce-img-empty"></span>`;
     return `<img class="${cls}" src="${url}" alt="" loading="lazy" onerror="this.outerHTML='<span class=\\'${cls} produce-img-empty\\'></span>'">`;
+}
+
+// Monats-Indizes (0-11) in lesbare Bereiche umwandeln, z.B. "Jun–Aug, Okt"
+function formatMonthRange(indices) {
+    if (!indices.length) return "—";
+    const sorted = [...indices].sort((a, b) => a - b);
+    const ranges = [];
+    let start = sorted[0], prev = sorted[0];
+    for (let k = 1; k < sorted.length; k++) {
+        if (sorted[k] === prev + 1) { prev = sorted[k]; }
+        else { ranges.push([start, prev]); start = sorted[k]; prev = sorted[k]; }
+    }
+    ranges.push([start, prev]);
+    return ranges
+        .map(([a, b]) => a === b ? MONTHS_SHORT[a] : `${MONTHS_SHORT[a]}–${MONTHS_SHORT[b]}`)
+        .join(", ");
+}
+
+// Info-Popup für ein Produkt (Beschreibung, Saison + passende Rezepte)
+async function openProduceModal(name) {
+    const item = SEASONAL_DATA.find(i => i.name === name);
+    if (!item) return;
+
+    const freshIdx = item.months.map((s, i) => s === 2 ? i : -1).filter(i => i >= 0);
+    const lagerIdx = item.months.map((s, i) => s === 1 ? i : -1).filter(i => i >= 0);
+
+    const overlay = document.createElement("div");
+    overlay.className = "produce-modal-overlay";
+    overlay.innerHTML = `
+        <div class="produce-modal">
+            <span class="produce-modal-close">&times;</span>
+            <div class="produce-modal-head">
+                ${produceImg(item, "produce-modal-img")}
+                <div>
+                    <span class="produce-modal-type">${item.type === "gemuese" ? "Gemüse" : "Obst"}</span>
+                    <h2>${item.name}</h2>
+                </div>
+            </div>
+            <div class="produce-modal-season">
+                <div><span class="legend-dot fresh"></span> Frisch: <strong>${formatMonthRange(freshIdx)}</strong></div>
+                <div><span class="legend-dot lager"></span> Aus Lager: <strong>${formatMonthRange(lagerIdx)}</strong></div>
+            </div>
+            <p class="produce-modal-desc">${item.desc || ""}</p>
+            <h3 class="produce-modal-recipes-title">Passende Rezepte</h3>
+            <div class="produce-modal-recipes" id="produce-modal-recipes">
+                <p class="manage-loading">Rezepte werden gesucht …</p>
+            </div>
+        </div>
+    `;
+
+    function doClose() {
+        overlay.remove();
+        document.body.style.overflow = "";
+        document.removeEventListener("keydown", onKey);
+    }
+    function onKey(e) { if (e.key === "Escape") doClose(); }
+    overlay.addEventListener("click", e => {
+        if (e.target === overlay || e.target.classList.contains("produce-modal-close")) doClose();
+    });
+    document.addEventListener("keydown", onKey);
+    document.body.appendChild(overlay);
+    document.body.style.overflow = "hidden";
+
+    // Rezepte über die (Synonym-)Suche laden – Klammerzusatz entfernen
+    const query = item.name.replace(/\s*\(.*\)\s*/, "").trim();
+    const box   = overlay.querySelector("#produce-modal-recipes");
+    try {
+        const recipes = await apiFetch(`/recipes/search?q=${encodeURIComponent(query)}`);
+        if (!recipes.length) {
+            box.innerHTML = `<p class="produce-no-recipes">Noch keine Rezepte mit ${item.name} auf der Website.</p>`;
+        } else {
+            box.innerHTML = recipes.slice(0, 6).map(r => {
+                const img = getImageUrl(r.image_path);
+                return `
+                    <a class="produce-recipe" href="recipe.html?id=${r.id}">
+                        ${img ? `<img src="${img}" alt="">` : `<div class="produce-recipe-noimg"></div>`}
+                        <span>${escapeHtml(r.title)}</span>
+                    </a>`;
+            }).join("");
+        }
+    } catch {
+        box.innerHTML = `<p class="produce-no-recipes">Rezepte konnten nicht geladen werden.</p>`;
+    }
 }
 
 // Jahreszeit aus Monat (0-11) bestimmen
@@ -910,6 +1047,12 @@ function initKochschule() {
             renderCalendar(tab.dataset.type, monthIdx);
         });
     });
+
+    // Klick auf ein Produkt (Chip oder Kalenderzeile) → Info-Popup
+    document.addEventListener("click", e => {
+        const el = e.target.closest(".produce-clickable");
+        if (el && el.dataset.produce) openProduceModal(el.dataset.produce);
+    });
 }
 
 function renderNowChips(type, monthIdx) {
@@ -918,7 +1061,7 @@ function renderNowChips(type, monthIdx) {
 
     const fresh = SEASONAL_DATA
         .filter(item => item.type === type && item.months[monthIdx] === 2)
-        .map(item => `<span class="season-chip">${produceImg(item, "chip-img")}${item.name}</span>`);
+        .map(item => `<span class="season-chip produce-clickable" data-produce="${escapeAttr(item.name)}">${produceImg(item, "chip-img")}${item.name}</span>`);
 
     box.innerHTML = fresh.length
         ? fresh.join("")
@@ -943,7 +1086,7 @@ function renderCalendar(type, monthIdx) {
             const cur = i === monthIdx ? " current-month" : "";
             return `<td class="cell ${cls}${cur}"></td>`;
         }).join("");
-        return `<tr><th class="row-label"><div class="row-label-inner">${produceImg(item, "row-img")}<span>${item.name}</span></div></th>${cells}</tr>`;
+        return `<tr><th class="row-label"><div class="row-label-inner produce-clickable" data-produce="${escapeAttr(item.name)}">${produceImg(item, "row-img")}<span>${item.name}</span></div></th>${cells}</tr>`;
     }).join("");
 
     table.innerHTML = `

@@ -782,7 +782,152 @@ document.addEventListener("DOMContentLoaded", () => {
         // ── Admin-Seite ──────────────────────────────────────
         initAdminForm();
     }
+
+    if (document.getElementById("season-calendar")) {
+        // ── Kochschule / Saisonkalender ──────────────────────
+        initKochschule();
+    }
 });
+
+
+// ════════════════════════════════════════════════════════════
+//  KOCHSCHULE – Saisonkalender & Live-Tracker
+// ════════════════════════════════════════════════════════════
+
+const MONTHS_SHORT = ["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"];
+const MONTHS_LONG  = ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+
+// Hilfsfunktion: erzeugt 12er-Array (0=keine, 1=Lager, 2=frisch) aus Monatslisten (1-12)
+function season(fresh = [], lager = []) {
+    const arr = Array(12).fill(0);
+    lager.forEach(m => { arr[m - 1] = 1; });
+    fresh.forEach(m => { arr[m - 1] = 2; });   // frisch überschreibt Lager
+    return arr;
+}
+
+const SEASONAL_DATA = [
+    // ── Gemüse ──────────────────────────────────────────────
+    { name: "Rüebli (Karotten)", type: "gemuese", months: season([6,7,8,9,10,11], [1,2,3,4,5,12]) },
+    { name: "Kartoffeln",        type: "gemuese", months: season([7,8,9,10], [1,2,3,4,5,6,11,12]) },
+    { name: "Zwiebeln",          type: "gemuese", months: season([8,9,10], [1,2,3,4,5,6,7,11,12]) },
+    { name: "Lauch",             type: "gemuese", months: season([1,2,3,4,9,10,11,12]) },
+    { name: "Tomaten",           type: "gemuese", months: season([6,7,8,9,10]) },
+    { name: "Peperoni",          type: "gemuese", months: season([7,8,9,10]) },
+    { name: "Zucchetti",         type: "gemuese", months: season([6,7,8,9]) },
+    { name: "Gurken",            type: "gemuese", months: season([6,7,8,9]) },
+    { name: "Spargel",           type: "gemuese", months: season([4,5,6]) },
+    { name: "Broccoli",          type: "gemuese", months: season([6,7,8,9,10]) },
+    { name: "Blumenkohl",        type: "gemuese", months: season([6,7,8,9,10,11]) },
+    { name: "Kürbis",            type: "gemuese", months: season([8,9,10,11], [12,1]) },
+    { name: "Spinat",            type: "gemuese", months: season([3,4,5,6,9,10,11]) },
+    { name: "Kopfsalat",         type: "gemuese", months: season([4,5,6,7,8,9,10]) },
+    { name: "Randen (Rote Bete)",type: "gemuese", months: season([6,7,8,9,10], [11,12,1,2,3]) },
+    { name: "Knollensellerie",   type: "gemuese", months: season([8,9,10,11], [12,1,2,3]) },
+    { name: "Fenchel",           type: "gemuese", months: season([6,7,8,9,10]) },
+    { name: "Rosenkohl",         type: "gemuese", months: season([1,2,9,10,11,12]) },
+    { name: "Champignons",       type: "gemuese", months: season([1,2,3,4,5,6,7,8,9,10,11,12]) },
+
+    // ── Obst ────────────────────────────────────────────────
+    { name: "Äpfel",       type: "obst", months: season([8,9,10,11], [12,1,2,3,4]) },
+    { name: "Birnen",      type: "obst", months: season([8,9,10], [11,12,1]) },
+    { name: "Erdbeeren",   type: "obst", months: season([5,6,7]) },
+    { name: "Kirschen",    type: "obst", months: season([6,7]) },
+    { name: "Himbeeren",   type: "obst", months: season([6,7,8,9]) },
+    { name: "Heidelbeeren",type: "obst", months: season([7,8,9]) },
+    { name: "Aprikosen",   type: "obst", months: season([7,8]) },
+    { name: "Pfirsiche",   type: "obst", months: season([7,8,9]) },
+    { name: "Zwetschgen",  type: "obst", months: season([8,9,10]) },
+    { name: "Trauben",     type: "obst", months: season([9,10]) },
+    { name: "Rhabarber",   type: "obst", months: season([4,5,6]) },
+    { name: "Quitten",     type: "obst", months: season([9,10,11]) },
+];
+
+// Jahreszeit aus Monat (0-11) bestimmen
+function getSeason(monthIndex) {
+    if (monthIndex >= 2 && monthIndex <= 4)  return { name: "Frühling", key: "fruehling" };
+    if (monthIndex >= 5 && monthIndex <= 7)  return { name: "Sommer",   key: "sommer" };
+    if (monthIndex >= 8 && monthIndex <= 10) return { name: "Herbst",   key: "herbst" };
+    return { name: "Winter", key: "winter" };
+}
+
+function initKochschule() {
+    const now      = new Date();
+    const monthIdx = now.getMonth();             // 0-11
+    const season   = getSeason(monthIdx);
+
+    // ── Saison-Banner ────────────────────────────────────────
+    const banner = document.getElementById("season-banner");
+    if (banner) {
+        banner.className = `season-banner season-${season.key}`;
+        banner.innerHTML = `
+            <span class="season-label">Aktuelle Jahreszeit</span>
+            <strong class="season-name">${season.name}</strong>
+            <span class="season-month">${MONTHS_LONG[monthIdx]} ${now.getFullYear()}</span>
+        `;
+    }
+
+    // ── "Jetzt frisch" Monatsname ────────────────────────────
+    const mn = document.getElementById("current-month-name");
+    if (mn) mn.textContent = MONTHS_LONG[monthIdx];
+
+    // ── Chips: was ist gerade frisch ─────────────────────────
+    renderNowChips("gemuese", monthIdx);
+    renderNowChips("obst", monthIdx);
+
+    // ── Kalender (Standard: Gemüse) ──────────────────────────
+    renderCalendar("gemuese", monthIdx);
+
+    // Tab-Umschaltung
+    document.querySelectorAll(".cal-tab").forEach(tab => {
+        tab.addEventListener("click", () => {
+            document.querySelectorAll(".cal-tab").forEach(t => t.classList.remove("active"));
+            tab.classList.add("active");
+            renderCalendar(tab.dataset.type, monthIdx);
+        });
+    });
+}
+
+function renderNowChips(type, monthIdx) {
+    const box = document.getElementById(type === "gemuese" ? "now-gemuese" : "now-obst");
+    if (!box) return;
+
+    const fresh = SEASONAL_DATA
+        .filter(item => item.type === type && item.months[monthIdx] === 2)
+        .map(item => `<span class="season-chip">${item.name}</span>`);
+
+    box.innerHTML = fresh.length
+        ? fresh.join("")
+        : `<span class="season-chip-empty">Gerade nichts frisch in Saison</span>`;
+}
+
+function renderCalendar(type, monthIdx) {
+    const table = document.getElementById("season-calendar");
+    if (!table) return;
+
+    const items = SEASONAL_DATA.filter(item => item.type === type);
+
+    // Kopfzeile mit Monaten (aktueller Monat hervorgehoben)
+    const headCells = MONTHS_SHORT
+        .map((m, i) => `<th class="${i === monthIdx ? "current-month" : ""}">${m}</th>`)
+        .join("");
+
+    // Datenzeilen
+    const rows = items.map(item => {
+        const cells = item.months.map((state, i) => {
+            const cls = state === 2 ? "fresh" : state === 1 ? "lager" : "none";
+            const cur = i === monthIdx ? " current-month" : "";
+            return `<td class="cell ${cls}${cur}"></td>`;
+        }).join("");
+        return `<tr><th class="row-label">${item.name}</th>${cells}</tr>`;
+    }).join("");
+
+    table.innerHTML = `
+        <thead>
+            <tr><th class="corner">${type === "gemuese" ? "Gemüse" : "Obst"}</th>${headCells}</tr>
+        </thead>
+        <tbody>${rows}</tbody>
+    `;
+}
 
 
 // ════════════════════════════════════════════════════════════

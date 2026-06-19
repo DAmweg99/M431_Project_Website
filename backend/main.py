@@ -120,6 +120,11 @@ def recipe():
 def admin():
     return FileResponse(str(ROOT / "admin.html"))
 
+@app.get("/kochschule", include_in_schema=False)
+@app.get("/kochschule.html", include_in_schema=False)
+def kochschule():
+    return FileResponse(str(ROOT / "kochschule.html"))
+
 # ── Statische Assets (CSS, JS, Bilder) ────────────────────────────────────────
 app.mount("/css",    StaticFiles(directory=str(ROOT / "css")),    name="css")
 app.mount("/js",     StaticFiles(directory=str(ROOT / "js")),     name="js")

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kochschule – Saisonkalender – Food Atelier</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- ── Header ───────────────────────────────────────────── -->
+    <header>
+        <div class="logo-wrap">
+            <img src="images/Panda_Chef.png" alt="Food Atelier Maskottchen" class="logo-mascot">
+            <h1>Food Atelier</h1>
+        </div>
+        <nav>
+            <a href="index.html">Startseite</a>
+            <a href="#">Neuigkeiten</a>
+            <a href="kategorien.html">Kategorien</a>
+            <a href="kochschule.html" class="nav-active">Kochschule</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="kochschule-wrap">
+
+            <!-- ── Titel + Live-Saison-Banner ────────────────── -->
+            <section class="kochschule-hero">
+                <h2 class="kochschule-title">Saisonkalender</h2>
+                <p class="kochschule-subtitle">
+                    Welches Gemüse und Obst gerade Saison hat – frisch aus der Region statt eingeflogen.
+                </p>
+                <div class="season-banner" id="season-banner">
+                    <!-- per JavaScript gefüllt -->
+                </div>
+            </section>
+
+            <!-- ── Jetzt frisch (Live-Tracker) ───────────────── -->
+            <section class="season-now">
+                <h3 class="section-heading">Jetzt frisch im <span id="current-month-name">…</span></h3>
+
+                <div class="season-now-block">
+                    <h4>Gemüse</h4>
+                    <div class="chip-row" id="now-gemuese"></div>
+                </div>
+                <div class="season-now-block">
+                    <h4>Obst</h4>
+                    <div class="chip-row" id="now-obst"></div>
+                </div>
+            </section>
+
+            <!-- ── Vollständiger Kalender ────────────────────── -->
+            <section class="calendar-section">
+                <div class="calendar-head">
+                    <h3 class="section-heading">Jahresübersicht</h3>
+                    <div class="calendar-tabs" id="calendar-tabs">
+                        <button class="cal-tab active" data-type="gemuese">Gemüse</button>
+                        <button class="cal-tab" data-type="obst">Obst</button>
+                    </div>
+                </div>
+
+                <div class="calendar-legend">
+                    <span class="legend-item"><span class="legend-dot fresh"></span> Saison (frisch)</span>
+                    <span class="legend-item"><span class="legend-dot lager"></span> aus Lager</span>
+                    <span class="legend-item"><span class="legend-dot none"></span> keine Saison</span>
+                </div>
+
+                <div class="calendar-wrap">
+                    <table class="season-calendar" id="season-calendar">
+                        <!-- per JavaScript gefüllt -->
+                    </table>
+                </div>
+                <p class="calendar-hint">Tipp: Die aktuelle Monatsspalte ist hervorgehoben. Auf dem Handy kannst du die Tabelle seitlich scrollen.</p>
+            </section>
+
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

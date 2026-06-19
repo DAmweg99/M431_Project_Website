@@ -17,50 +17,71 @@ SYNONYM_GROUPS = [
         "frites", "fries", "rösti", "roesti", "gnocchi", "kartoffelstock",
         "kartoffelpüree", "kartoffelpuree", "püree", "bratkartoffeln",
         "kartoffelsalat", "wedges", "chips", "gschwellti",
+        # Englisch
+        "potato", "potatoes", "mashed potatoes", "hash browns",
     },
     # Rind / Hackfleisch
     {
         "rind", "rindfleisch", "rinderhack", "hackfleisch", "hack",
         "burger", "smashburger", "patty", "patties", "steak", "voressen",
         "tatar", "tartar",
+        # Englisch
+        "beef", "ground beef", "minced meat", "minced beef",
     },
     # Geflügel
     {
         "geflügel", "gefluegel", "poulet", "pouletbrust", "huhn", "hähnchen",
         "haehnchen", "hühnchen", "chicken", "pute", "truthahn",
+        # Englisch
+        "poultry", "chicken breast", "turkey",
     },
     # Fisch / Meeresfrüchte
     {
         "fisch", "lachs", "lachsfilet", "thunfisch", "forelle", "dorade",
         "egli", "felchen", "garnelen", "crevetten", "shrimps", "scampi",
+        # Englisch
+        "fish", "salmon", "tuna", "trout", "shrimp", "prawns", "seafood",
     },
     # Käse
     {
         "käse", "kaese", "cheddar", "parmesan", "mozzarella", "gruyère",
         "gruyere", "greyerzer", "raclette", "feta", "gorgonzola",
+        # Englisch
+        "cheese",
     },
     # Tomaten / Tomatenprodukte
     {
         "tomate", "tomaten", "ketchup", "passata", "sugo", "tomatenmark",
         "pelati", "cherrytomaten",
+        # Englisch
+        "tomato", "tomatoes", "cherry tomatoes", "tomato paste",
     },
     # Teigwaren / Pasta
     {
         "teigwaren", "pasta", "spaghetti", "nudeln", "penne", "tagliatelle",
         "spätzli", "spaetzli", "spätzle", "tortellini", "ravioli", "lasagne",
+        # Englisch
+        "noodles", "lasagna",
     },
     # Zwiebelgewächse
     {
         "zwiebel", "zwiebeln", "schalotte", "schalotten", "lauch",
         "frühlingszwiebel", "frühlingszwiebeln",
+        # Englisch
+        "onion", "onions", "shallot", "shallots", "leek", "spring onion",
+        "scallion",
     },
     # Reis
     {
         "reis", "risotto", "basmati", "milchreis", "paella",
+        # Englisch
+        "rice",
     },
     # Eier
     {
         "ei", "eier", "omelette", "rührei", "spiegelei", "pochiertes ei",
+        # Englisch
+        "egg", "eggs", "scrambled eggs", "fried egg", "poached egg",
     },
 ]
 

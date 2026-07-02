@@ -71,12 +71,14 @@ function closePopup() {
     localStorage.setItem("fa_popup_seen", "1");
 }
 
-// Popup nur beim allerersten Besuch zeigen
+// Popup nur beim allerersten Besuch zeigen.
+// Standardmässig ist es im HTML versteckt (display:none) -> kein Aufblitzen
+// bei wiederkehrenden Besuchern. Nur beim ersten Besuch wird es eingeblendet.
 function initWelcomePopup() {
     const popup = document.getElementById("popup");
     if (!popup) return;
-    if (localStorage.getItem("fa_popup_seen") === "1") {
-        popup.style.display = "none";   // schon gesehen -> ausgeblendet
+    if (localStorage.getItem("fa_popup_seen") !== "1") {
+        popup.style.display = "flex";   // erster Besuch -> anzeigen
     }
 }
 

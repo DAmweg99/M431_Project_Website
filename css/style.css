@@ -2238,13 +2238,13 @@ nav {
 
 /* Aktuelle Monatsspalte hervorheben */
 .season-calendar th.current-month {
-    color: #88a63d;
+    color: #d62828;
     font-weight: 700;
-    background: #f4f7ee;
+    background: #fdecec;
     border-radius: 6px 6px 0 0;
 }
 .season-calendar td.current-month {
-    box-shadow: inset 2px 0 0 #88a63d, inset -2px 0 0 #88a63d;
+    box-shadow: inset 2px 0 0 #d62828, inset -2px 0 0 #d62828;
 }
 
 .calendar-hint {

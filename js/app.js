@@ -67,6 +67,17 @@ function openLightbox(src, alt) {
 
 function closePopup() {
     document.getElementById("popup").style.display = "none";
+    // Merken, dass der Besucher das Willkommens-Popup gesehen hat
+    localStorage.setItem("fa_popup_seen", "1");
+}
+
+// Popup nur beim allerersten Besuch zeigen
+function initWelcomePopup() {
+    const popup = document.getElementById("popup");
+    if (!popup) return;
+    if (localStorage.getItem("fa_popup_seen") === "1") {
+        popup.style.display = "none";   // schon gesehen -> ausgeblendet
+    }
 }
 
 
@@ -726,6 +737,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const hasRecipeGrid = document.getElementById("recipe-grid")      !== null;
     const hasSearch     = document.getElementById("search-input")     !== null;
     const isDetail      = document.getElementById("recipe-detail")    !== null;
+
+    // ── Willkommens-Popup (nur beim ersten Besuch) ───────────
+    initWelcomePopup();
 
     // ── Featured Rezept (index.html) ─────────────────────────
     if (hasFeatured) {
